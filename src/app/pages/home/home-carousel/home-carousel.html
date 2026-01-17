@@ -1,0 +1,60 @@
+<div class="carousel-container" *ngIf="!isLoading && !error && promotions.length > 0">
+  <div class="carousel-slides">
+    <div 
+      *ngFor="let promotion of promotions; let i = index" 
+      class="carousel-slide"
+      [class.active]="i === currentSlide"
+      [style.background-image]="'url(' + promotion.image + ')'"
+      (click)="onPromotionClick(promotion)">
+      
+      <div class="carousel-content">
+        <h2 class="carousel-title">{{ promotion.title }}</h2>
+        <p class="carousel-description">{{ promotion.description }}</p>
+        <button 
+          *ngIf="promotion.button_text && promotion.link_url" 
+          class="carousel-button">
+          {{ promotion.button_text }}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Navigation Arrows -->
+  <button 
+    class="carousel-control prev" 
+    (click)="previousSlide(); $event.stopPropagation()"
+    *ngIf="promotions.length > 1"
+    aria-label="Previous slide">
+    <i class="bi bi-chevron-left"></i>
+  </button>
+  <button 
+    class="carousel-control next" 
+    (click)="nextSlide(); $event.stopPropagation()"
+    *ngIf="promotions.length > 1"
+    aria-label="Next slide">
+    <i class="bi bi-chevron-right"></i>
+  </button>
+
+  <!-- Dots Indicator -->
+  <div class="carousel-dots" *ngIf="promotions.length > 1">
+    <span 
+      *ngFor="let promotion of promotions; let i = index"
+      class="dot"
+      [class.active]="i === currentSlide"
+      (click)="goToSlide(i); $event.stopPropagation()"
+      [attr.aria-label]="'Go to slide ' + (i + 1)">
+    </span>
+  </div>
+</div>
+
+<div class="loading" *ngIf="isLoading">
+  <div class="spinner-border text-red" role="status">
+    <span class="visually-hidden">Loading promotions...</span>
+  </div>
+  <p class="mt-3 text-gray">Loading promotions...</p>
+</div>
+
+<div class="error-message" *ngIf="error">
+  <i class="bi bi-exclamation-triangle text-danger"></i>
+  <p>{{ error }}</p>
+</div>

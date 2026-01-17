@@ -1,0 +1,557 @@
+<!-- Checkout Header -->
+<div class="container-fluid bg-light-gray py-4">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-md-8">
+        <h1 class="text-black fw-bold mb-2">Checkout</h1>
+        <nav aria-label="Checkout steps" class="d-none d-md-block">
+          <ul class="checkout-steps list-unstyled d-flex mb-0">
+            <li class="checkout-step" [class.active]="currentStep === 1" [class.completed]="currentStep > 1">
+              <span class="step-number">1</span>
+              <span class="step-label">Shipping</span>
+            </li>
+            <li class="checkout-step" [class.active]="currentStep === 2" [class.completed]="currentStep > 2">
+              <span class="step-number">2</span>
+              <span class="step-label">Payment</span>
+            </li>
+            <li class="checkout-step" [class.active]="currentStep === 3" [class.completed]="currentStep > 3">
+              <span class="step-number">3</span>
+              <span class="step-label">Review</span>
+            </li>
+            <li class="checkout-step" [class.active]="currentStep === 4">
+              <span class="step-number">4</span>
+              <span class="step-label">Confirmation</span>
+            </li>
+          </ul>
+        </nav>
+      </div>
+      <div class="col-md-4 text-md-end">
+        <a routerLink="/cart" class="btn btn-outline-red">
+          <i class="bi bi-arrow-left me-2"></i> Back to Cart
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Loading State -->
+<div *ngIf="isLoading" class="container py-5">
+  <div class="text-center">
+    <div class="spinner-border text-red" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <p class="text-gray mt-2">Loading checkout...</p>
+  </div>
+</div>
+
+<!-- Error State -->
+<div *ngIf="errorMessage" class="container py-5">
+  <div class="alert alert-danger">
+    <h4 class="alert-heading">Error</h4>
+    <p>{{ errorMessage }}</p>
+    <a routerLink="/cart" class="btn btn-outline-red">Back to Cart</a>
+  </div>
+</div>
+
+<!-- Checkout Content -->
+<div *ngIf="!isLoading && !errorMessage" class="container py-5">
+  <div class="row">
+    <!-- Left Column: Checkout Steps -->
+    <div class="col-lg-8">
+      
+      <!-- Step 1: Shipping Address -->
+      <div *ngIf="currentStep === 1" class="checkout-step-content">
+        <div class="card border-0 shadow-sm mb-4">
+          <div class="card-body">
+            <h3 class="card-title text-black mb-4">
+              <i class="bi bi-truck text-red me-2"></i> Shipping Information
+            </h3>
+            
+            <form [formGroup]="shippingForm" (ngSubmit)="proceedToPayment()">
+              <!-- Full Name -->
+              <div class="row mb-3">
+                <div class="col-md-6">
+                  <label for="firstName" class="form-label text-black">First Name</label>
+                  <input type="text" 
+                         class="form-control" 
+                         id="firstName"
+                         formControlName="firstName"
+                         [class.is-invalid]="shippingForm.get('firstName')?.invalid && shippingForm.get('firstName')?.touched">
+                  <div class="invalid-feedback" *ngIf="shippingForm.get('firstName')?.errors?.['required']">
+                    First name is required
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <label for="lastName" class="form-label text-black">Last Name</label>
+                  <input type="text" 
+                         class="form-control" 
+                         id="lastName"
+                         formControlName="lastName"
+                         [class.is-invalid]="shippingForm.get('lastName')?.invalid && shippingForm.get('lastName')?.touched">
+                  <div class="invalid-feedback" *ngIf="shippingForm.get('lastName')?.errors?.['required']">
+                    Last name is required
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Address -->
+              <div class="mb-3">
+                <label for="address" class="form-label text-black">Address</label>
+                <input type="text" 
+                       class="form-control" 
+                       id="address"
+                       formControlName="address"
+                       placeholder="Street address"
+                       [class.is-invalid]="shippingForm.get('address')?.invalid && shippingForm.get('address')?.touched">
+                <div class="invalid-feedback" *ngIf="shippingForm.get('address')?.errors?.['required']">
+                  Address is required
+                </div>
+              </div>
+              
+              <!-- City & Zip Code -->
+              <div class="row mb-3">
+                <div class="col-md-6">
+                  <label for="city" class="form-label text-black">City</label>
+                  <input type="text" 
+                         class="form-control" 
+                         id="city"
+                         formControlName="city"
+                         [class.is-invalid]="shippingForm.get('city')?.invalid && shippingForm.get('city')?.touched">
+                  <div class="invalid-feedback" *ngIf="shippingForm.get('city')?.errors?.['required']">
+                    City is required
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <label for="zipCode" class="form-label text-black">Zip Code</label>
+                  <input type="text" 
+                         class="form-control" 
+                         id="zipCode"
+                         formControlName="zipCode"
+                         [class.is-invalid]="shippingForm.get('zipCode')?.invalid && shippingForm.get('zipCode')?.touched">
+                  <div class="invalid-feedback" *ngIf="shippingForm.get('zipCode')?.errors?.['required']">
+                    Zip code is required
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Phone & Email -->
+              <div class="row mb-4">
+                <div class="col-md-6">
+                  <label for="phone" class="form-label text-black">Phone Number</label>
+                  <input type="tel" 
+                         class="form-control" 
+                         id="phone"
+                         formControlName="phone"
+                         placeholder="0771234567"
+                         [class.is-invalid]="shippingForm.get('phone')?.invalid && shippingForm.get('phone')?.touched">
+                  <div class="invalid-feedback" *ngIf="shippingForm.get('phone')?.errors?.['required']">
+                    Phone number is required
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <label for="email" class="form-label text-black">Email</label>
+                  <input type="email" 
+                         class="form-control" 
+                         id="email"
+                         formControlName="email"
+                         [class.is-invalid]="shippingForm.get('email')?.invalid && shippingForm.get('email')?.touched">
+                  <div class="invalid-feedback" *ngIf="shippingForm.get('email')?.errors?.['required']">
+                    Email is required
+                  </div>
+                  <div class="invalid-feedback" *ngIf="shippingForm.get('email')?.errors?.['email']">
+                    Please enter a valid email
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Shipping Method -->
+              <div class="mb-4">
+                <h6 class="text-black mb-3">Shipping Method</h6>
+                <div class="form-check mb-2">
+                  <input class="form-check-input" 
+                         type="radio" 
+                         id="standardShipping"
+                         formControlName="shippingMethod"
+                         value="standard">
+                  <label class="form-check-label text-gray" for="standardShipping">
+                    Standard Shipping (3-5 business days) - FREE
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" 
+                         type="radio" 
+                         id="expressShipping"
+                         formControlName="shippingMethod"
+                         value="express">
+                  <label class="form-check-label text-gray" for="expressShipping">
+                    Express Shipping (1-2 business days) - $10.00
+                  </label>
+                </div>
+              </div>
+              
+              <!-- Navigation Buttons -->
+              <div class="d-flex justify-content-between">
+                <a routerLink="/cart" class="btn btn-outline-red">
+                  <i class="bi bi-arrow-left me-2"></i> Back to Cart
+                </a>
+                <button type="submit" 
+                        class="btn btn-red"
+                        [disabled]="shippingForm.invalid || isProcessing">
+                  Continue to Payment <i class="bi bi-arrow-right ms-2"></i>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Step 2: Payment Information -->
+      <div *ngIf="currentStep === 2" class="checkout-step-content">
+        <div class="card border-0 shadow-sm mb-4">
+          <div class="card-body">
+            <h3 class="card-title text-black mb-4">
+              <i class="bi bi-credit-card text-red me-2"></i> Payment Information
+            </h3>
+            
+            <form [formGroup]="paymentForm" (ngSubmit)="proceedToReview()">
+              <!-- Payment Method -->
+              <div class="mb-4">
+                <h6 class="text-black mb-3">Payment Method</h6>
+                <div class="row g-3">
+                  <div class="col-md-4">
+                    <div class="payment-option">
+                      <input type="radio" 
+                             id="cardPayment"
+                             formControlName="paymentMethod"
+                             value="card"
+                             class="btn-check">
+                      <label for="cardPayment" class="btn btn-outline-red w-100">
+                        <i class="bi bi-credit-card-2-front me-2"></i> Card
+                      </label>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="payment-option">
+                      <input type="radio" 
+                             id="bankTransfer"
+                             formControlName="paymentMethod"
+                             value="bank"
+                             class="btn-check">
+                      <label for="bankTransfer" class="btn btn-outline-red w-100">
+                        <i class="bi bi-bank me-2"></i> Bank Transfer
+                      </label>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="payment-option">
+                      <input type="radio" 
+                             id="mobileMoney"
+                             formControlName="paymentMethod"
+                             value="mobile"
+                             class="btn-check">
+                      <label for="mobileMoney" class="btn btn-outline-red w-100">
+                        <i class="bi bi-phone me-2"></i> Mobile Money
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Card Details (shown when card is selected) -->
+              <div *ngIf="paymentForm.get('paymentMethod')?.value === 'card'" class="mb-4">
+                <div class="row mb-3">
+                  <div class="col-md-12">
+                    <label for="cardNumber" class="form-label text-black">Card Number</label>
+                    <input type="text" 
+                           class="form-control" 
+                           id="cardNumber"
+                           formControlName="cardNumber"
+                           placeholder="1234 5678 9012 3456"
+                           maxlength="19">
+                  </div>
+                </div>
+                <div class="row mb-3">
+                  <div class="col-md-6">
+                    <label for="expiryDate" class="form-label text-black">Expiry Date</label>
+                    <input type="text" 
+                           class="form-control" 
+                           id="expiryDate"
+                           formControlName="expiryDate"
+                           placeholder="MM/YY"
+                           maxlength="5">
+                  </div>
+                  <div class="col-md-6">
+                    <label for="cvv" class="form-label text-black">CVV</label>
+                    <input type="text" 
+                           class="form-control" 
+                           id="cvv"
+                           formControlName="cvv"
+                           placeholder="123"
+                           maxlength="3">
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-12">
+                    <label for="cardName" class="form-label text-black">Name on Card</label>
+                    <input type="text" 
+                           class="form-control" 
+                           id="cardName"
+                           formControlName="cardName">
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Payment Instructions for other methods -->
+              <div *ngIf="paymentForm.get('paymentMethod')?.value === 'bank'" class="alert alert-info mb-4">
+                <h6 class="alert-heading">Bank Transfer Instructions</h6>
+                <p class="mb-1">Account Name: MANYMOR STORES</p>
+                <p class="mb-1">Account Number: 1234567890</p>
+                <p class="mb-1">Bank: CBZ Bank</p>
+                <p class="mb-0">Branch: Harare Main Branch</p>
+              </div>
+              
+              <div *ngIf="paymentForm.get('paymentMethod')?.value === 'mobile'" class="alert alert-info mb-4">
+                <h6 class="alert-heading">Mobile Money Instructions</h6>
+                <p class="mb-1">Send payment to: 0771 234 567</p>
+                <p class="mb-1">Provider: EcoCash</p>
+                <p class="mb-0">Reference: Your order number</p>
+              </div>
+              
+              <!-- Navigation Buttons -->
+              <div class="d-flex justify-content-between">
+                <button type="button" 
+                        class="btn btn-outline-red"
+                        (click)="goToStep(1)">
+                  <i class="bi bi-arrow-left me-2"></i> Back to Shipping
+                </button>
+                <button type="submit" 
+                        class="btn btn-red"
+                        [disabled]="paymentForm.invalid || isProcessing">
+                  Review Order <i class="bi bi-arrow-right ms-2"></i>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Step 3: Order Review -->
+      <div *ngIf="currentStep === 3" class="checkout-step-content">
+        <div class="card border-0 shadow-sm mb-4">
+          <div class="card-body">
+            <h3 class="card-title text-black mb-4">
+              <i class="bi bi-clipboard-check text-red me-2"></i> Review Your Order
+            </h3>
+            
+            <!-- Order Summary -->
+            <div class="order-review">
+              <!-- Shipping Information -->
+              <div class="mb-4">
+                <h6 class="text-black mb-3">Shipping Information</h6>
+                <div class="card bg-light-gray border-0">
+                  <div class="card-body">
+                    <p class="mb-1">
+                      <strong>{{ shippingInfo.firstName }} {{ shippingInfo.lastName }}</strong>
+                    </p>
+                    <p class="mb-1">{{ shippingInfo.address }}</p>
+                    <p class="mb-1">{{ shippingInfo.city }}, {{ shippingInfo.zipCode }}</p>
+                    <p class="mb-1">Phone: {{ shippingInfo.phone }}</p>
+                    <p class="mb-0">Email: {{ shippingInfo.email }}</p>
+                    <p class="mb-0 mt-2">
+                      <strong>Shipping Method:</strong> 
+                      {{ shippingInfo.shippingMethod === 'express' ? 'Express (1-2 days)' : 'Standard (3-5 days)' }}
+                    </p>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Payment Information -->
+              <div class="mb-4">
+                <h6 class="text-black mb-3">Payment Information</h6>
+                <div class="card bg-light-gray border-0">
+                  <div class="card-body">
+                    <p class="mb-1">
+                      <strong>Payment Method:</strong> 
+                      {{ getPaymentMethodLabel(paymentInfo.paymentMethod) }}
+                    </p>
+                    <p *ngIf="paymentInfo.paymentMethod === 'card'" class="mb-0">
+                      Card ending in: •••• {{ paymentInfo.cardNumber?.slice(-4) }}
+                    </p>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Order Items -->
+              <div class="mb-4">
+                <h6 class="text-black mb-3">Order Items ({{ cart?.items?.length || 0 }})</h6>
+                <div class="order-items">
+                  <div *ngFor="let item of cart?.items" class="order-item d-flex align-items-center mb-3 pb-3 border-bottom">
+                    <img [src]="getProductImage(item.product)" 
+                         [alt]="item.product.name"
+                         class="rounded me-3"
+                         style="width: 60px; height: 60px; object-fit: cover;">
+                    <div class="flex-grow-1">
+                      <h6 class="text-black mb-1">{{ item.product.name }}</h6>
+                      <p class="text-gray small mb-0">Qty: {{ item.quantity }}</p>
+                    </div>
+                    <div class="text-end">
+                      <p class="text-black fw-medium mb-0">${{ item.product.price }}</p>
+                      <p class="text-gray small mb-0">${{ (item.product.price * item.quantity).toFixed(2) }} total</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Order Totals -->
+              <div class="mb-4">
+                <h6 class="text-black mb-3">Order Summary</h6>
+                <div class="card bg-light-gray border-0">
+                  <div class="card-body">
+                    <div class="d-flex justify-content-between mb-2">
+                      <span class="text-gray">Subtotal</span>
+                      <span class="text-black fw-medium">${{ getSubtotal().toFixed(2) }}</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                      <span class="text-gray">Shipping</span>
+                      <span class="text-black fw-medium">
+                        {{ shippingInfo.shippingMethod === 'express' ? '$10.00' : 'FREE' }}
+                      </span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                      <span class="text-gray">Tax (15%)</span>
+                      <span class="text-black fw-medium">${{ getTax().toFixed(2) }}</span>
+                    </div>
+                    <hr>
+                    <div class="d-flex justify-content-between">
+                      <span class="text-black fw-bold">Total</span>
+                      <span class="text-red fw-bold fs-5">${{ getTotal().toFixed(2) }}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Terms Agreement -->
+              <div class="form-check mb-4">
+                <input class="form-check-input" 
+                       type="checkbox" 
+                       id="agreeTerms"
+                       [(ngModel)]="agreeTerms"
+                       [class.is-invalid]="!agreeTerms && termsTouched">
+                <label class="form-check-label text-gray" for="agreeTerms">
+                  I agree to the <a href="#" class="text-red">Terms & Conditions</a> and 
+                  <a href="#" class="text-red">Privacy Policy</a>
+                </label>
+                <div class="invalid-feedback" *ngIf="!agreeTerms && termsTouched">
+                  You must agree to the terms to proceed
+                </div>
+              </div>
+              
+              <!-- Navigation Buttons -->
+              <div class="d-flex justify-content-between">
+                <button type="button" 
+                        class="btn btn-outline-red"
+                        (click)="goToStep(2)">
+                  <i class="bi bi-arrow-left me-2"></i> Back to Payment
+                </button>
+                <button type="button" 
+                        class="btn btn-red"
+                        (click)="placeOrder()"
+                        [disabled]="!agreeTerms || isProcessing">
+                  <span *ngIf="!isProcessing">
+                    Place Order <i class="bi bi-check-circle ms-2"></i>
+                  </span>
+                  <span *ngIf="isProcessing">
+                    <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                    Processing...
+                  </span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Step 4: Order Confirmation (Redirects to separate component) -->
+      <div *ngIf="currentStep === 4" class="checkout-step-content">
+        <!-- This will redirect to OrderConfirmationComponent -->
+        <div class="text-center py-5">
+          <div class="spinner-border text-red" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+          <p class="text-gray mt-2">Redirecting to order confirmation...</p>
+        </div>
+      </div>
+      
+    </div>
+    
+    <!-- Right Column: Order Summary (Sticky) -->
+    <div class="col-lg-4">
+      <div class="card border-0 shadow-sm sticky-top" style="top: 20px;">
+        <div class="card-body">
+          <h5 class="card-title text-black mb-4">Order Summary</h5>
+          
+          <!-- Cart Items Preview -->
+          <div class="order-preview mb-3">
+            <div *ngFor="let item of cart?.items?.slice(0, 3)" class="d-flex align-items-center mb-2">
+              <img [src]="getProductImage(item.product)" 
+                   [alt]="item.product.name"
+                   class="rounded me-2"
+                   style="width: 40px; height: 40px; object-fit: cover;">
+              <div class="flex-grow-1">
+                <p class="text-black small mb-0">{{ item.product.name }}</p>
+                <p class="text-gray small mb-0">Qty: {{ item.quantity }} × ${{ item.product.price }}</p>
+              </div>
+            </div>
+            <div *ngIf="cart && cart.items.length > 3" class="text-center mt-2">
+              <span class="text-gray small">+ {{ cart.items.length - 3 }} more items</span>
+            </div>
+          </div>
+          
+          <hr>
+          
+          <!-- Order Totals -->
+          <div class="mb-3">
+            <div class="d-flex justify-content-between mb-2">
+              <span class="text-gray">Subtotal</span>
+              <span class="text-black fw-medium">${{ getSubtotal().toFixed(2) }}</span>
+            </div>
+            <div class="d-flex justify-content-between mb-2">
+              <span class="text-gray">Shipping</span>
+              <span class="text-black fw-medium">
+                {{ (shippingInfo.shippingMethod === 'express' && currentStep >= 1) ? '$10.00' : 'FREE' }}
+              </span>
+            </div>
+            <div class="d-flex justify-content-between mb-2">
+              <span class="text-gray">Tax</span>
+              <span class="text-black fw-medium">${{ getTax().toFixed(2) }}</span>
+            </div>
+            <hr>
+            <div class="d-flex justify-content-between">
+              <span class="text-black fw-bold">Total</span>
+              <span class="text-red fw-bold fs-5">${{ getTotal().toFixed(2) }}</span>
+            </div>
+          </div>
+          
+          <!-- Security Info -->
+          <div class="mt-4 pt-3 border-top">
+            <div class="d-flex align-items-center mb-2">
+              <i class="bi bi-shield-check text-success me-2"></i>
+              <small class="text-gray">Secure SSL encryption</small>
+            </div>
+            <div class="d-flex align-items-center">
+              <i class="bi bi-lock text-success me-2"></i>
+              <small class="text-gray">Your payment is secure</small>
+            </div>
+          </div>
+          
+          <!-- Help Info -->
+          <div class="mt-3">
+            <a href="#" class="text-red small text-decoration-none">
+              <i class="bi bi-question-circle me-1"></i> Need help?
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

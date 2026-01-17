@@ -1,0 +1,129 @@
+<!-- Header -->
+<header class="bg-black text-white shadow-sm">
+  <div class="container">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-black p-0">
+      <!-- Logo -->
+      <a class="navbar-brand fw-bold fs-3" routerLink="/">
+        <span class="text-red">MANY</span><span class="text-white">MOR</span>
+      </a>
+
+      <!-- Mobile Toggle -->
+      <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- Navigation Items -->
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <!-- Main Navigation -->
+        <ul class="navbar-nav me-auto">
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+              <i class="bi bi-house me-1"></i> Home
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/products" routerLinkActive="active">
+              <i class="bi bi-shop me-1"></i> Products
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/about" routerLinkActive="active">
+              <i class="bi bi-info-circle me-1"></i> About Us
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/contact" routerLinkActive="active">
+              <i class="bi bi-envelope me-1"></i> Contact Us
+            </a>
+          </li>
+        </ul>
+
+        <!-- Right Side Actions -->
+        <div class="d-flex align-items-center">
+          <!-- Search Bar -->
+          <div class="input-group me-3 d-none d-lg-flex" style="width: 300px;">
+            <input type="text" class="form-control bg-dark text-white border-dark" 
+                   placeholder="Search products..." 
+                   [(ngModel)]="searchQuery"
+                   (keyup.enter)="onSearch()">
+            <button class="btn btn-red" type="button" (click)="onSearch()">
+              <i class="bi bi-search"></i>
+            </button>
+          </div>
+
+          <!-- Cart Icon with Badge -->
+          <div class="nav-item dropdown me-3" *ngIf="authService.isAuthenticated()">
+              <a class="nav-link position-relative" routerLink="/cart" role="button">
+                <i class="bi bi-cart3 fs-5"></i>
+                <span *ngIf="cartItemCount > 0" 
+                      class="position-absolute badge rounded-pill bg-red cart-badge"
+                      [class.cart-badge-update]="cartItemCount > 0">
+                  {{ cartItemCount }}
+                  <span class="visually-hidden">items in cart</span>
+                </span>
+              </a>
+            </div>
+
+          <!-- User Dropdown -->
+          <div class="nav-item dropdown" *ngIf="authService.isAuthenticated(); else loginButtons">
+            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" 
+               data-bs-toggle="dropdown" aria-expanded="false">
+              <div class="rounded-circle bg-light text-black d-flex align-items-center justify-content-center" 
+                   style="width: 32px; height: 32px;">
+                <i class="bi bi-person"></i>
+              </div>
+              <span class="ms-2 d-none d-md-inline">
+                {{ (authService.getCurrentUser()?.email || '').split('@')[0] }}
+              </span>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end border-0 shadow">
+              <li>
+                <a class="dropdown-item" routerLink="/profile">
+                  <i class="bi bi-person-circle me-2"></i> My Profile
+                </a>
+              </li>
+              <li *ngIf="authService.isAdmin()">
+                <a class="dropdown-item" routerLink="/admin/dashboard">
+                  <i class="bi bi-speedometer2 me-2"></i> Admin Dashboard
+                </a>
+              </li>
+              <li><hr class="dropdown-divider"></li>
+              <li>
+                <a class="dropdown-item text-danger" (click)="onLogout()">
+                  <i class="bi bi-box-arrow-right me-2"></i> Logout
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Login/Signup Buttons (When not logged in) -->
+          <ng-template #loginButtons>
+            <div class="d-flex">
+              <a class="btn btn-outline-red me-2" routerLink="/login">
+                <i class="bi bi-box-arrow-in-right me-1"></i> Login
+              </a>
+              <a class="btn btn-red" routerLink="/register">
+                <i class="bi bi-person-plus me-1"></i> Sign Up
+              </a>
+            </div>
+          </ng-template>
+        </div>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<!-- Mobile Search Bar -->
+<div *ngIf="showMobileSearch" class="bg-dark py-2 d-lg-none">
+  <div class="container">
+    <div class="input-group">
+      <input type="text" class="form-control bg-black text-white border-black" 
+             placeholder="Search products..." 
+             [(ngModel)]="searchQuery"
+             (keyup.enter)="onSearch()">
+      <button class="btn btn-red" type="button" (click)="onSearch()">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </div>
+</div>

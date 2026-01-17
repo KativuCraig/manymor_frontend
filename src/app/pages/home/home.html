@@ -1,0 +1,390 @@
+<!-- ================= HERO SECTION WITH CAROUSEL ================= -->
+<section class="hero-section bg-black text-white py-5">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-lg-6 mb-4 mb-lg-0">
+        <h1 class="display-4 fw-bold mb-3">
+          Welcome to <span class="text-red">MANYMOR</span>
+        </h1>
+        <p class="lead mb-4">
+          Your trusted e-commerce destination for quality products and exceptional service.
+          Shop with confidence and experience the best online shopping in Zimbabwe.
+        </p>
+        <div class="d-flex flex-wrap gap-3">
+          <a routerLink="/products" class="btn btn-red btn-lg px-4">
+            <i class="bi bi-shop me-2"></i> Shop Now
+          </a>
+          <a routerLink="/categories" class="btn btn-outline-red btn-lg px-4">
+            <i class="bi bi-tags me-2"></i> Browse Categories
+          </a>
+        </div>
+      </div>
+
+      <div class="col-lg-6">
+        <!-- Carousel Promotions -->
+        <div class="hero-carousel-container" *ngIf="!isLoadingCarousel && carouselPromotions.length > 0">
+          <div class="hero-carousel-slides">
+            <div 
+              *ngFor="let promotion of carouselPromotions; let i = index" 
+              class="hero-carousel-slide"
+              [class.active]="i === currentSlide"
+              [style.background-image]="'url(' + promotion.image + ')'"
+              (click)="onPromotionClick(promotion)">
+              
+              <div class="hero-carousel-content">
+                <h2 class="hero-carousel-title">{{ promotion.title }}</h2>
+                <p class="hero-carousel-description">{{ promotion.description }}</p>
+                <button 
+                  *ngIf="promotion.button_text && promotion.link_url" 
+                  class="btn btn-red">
+                  {{ promotion.button_text }}
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Navigation Arrows -->
+          <button 
+            class="hero-carousel-control prev" 
+            (click)="previousSlide(); $event.stopPropagation()"
+            *ngIf="carouselPromotions.length > 1">
+            <i class="bi bi-chevron-left"></i>
+          </button>
+          <button 
+            class="hero-carousel-control next" 
+            (click)="nextSlide(); $event.stopPropagation()"
+            *ngIf="carouselPromotions.length > 1">
+            <i class="bi bi-chevron-right"></i>
+          </button>
+
+          <!-- Dots Indicator -->
+          <div class="hero-carousel-dots" *ngIf="carouselPromotions.length > 1">
+            <span 
+              *ngFor="let promotion of carouselPromotions; let i = index"
+              class="hero-dot"
+              [class.active]="i === currentSlide"
+              (click)="goToSlide(i); $event.stopPropagation()">
+            </span>
+          </div>
+        </div>
+
+        <!-- Loading State -->
+        <div *ngIf="isLoadingCarousel" class="hero-carousel-loading">
+          <div class="spinner-border text-danger" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        </div>
+
+        <!-- Fallback Image -->
+        <img
+          *ngIf="!isLoadingCarousel && carouselPromotions.length === 0"
+          src="https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?auto=format&fit=crop&w=800&q=80"
+          alt="Online Shopping"
+          class="img-fluid rounded shadow-lg"
+        />
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= FEATURES ================= -->
+<section class="py-5 bg-light-gray">
+  <div class="container">
+    <div class="row g-4">
+      <div class="col-md-4" *ngFor="let feature of [1,2,3]">
+        <div class="card border-0 shadow-sm h-100 text-center p-4">
+          <div class="feature-icon mb-3">
+            <i
+              class="bi"
+              [ngClass]="{
+                'bi-truck': feature === 1,
+                'bi-shield-check': feature === 2,
+                'bi-headset': feature === 3
+              }"
+            ></i>
+          </div>
+          <h5 class="fw-bold">
+            {{ feature === 1 ? 'Fast Delivery' :
+               feature === 2 ? 'Secure Shopping' : '24/7 Support' }}
+          </h5>
+          <p class="text-muted">
+            {{
+              feature === 1
+                ? 'Quick and reliable delivery across Zimbabwe.'
+                : feature === 2
+                ? 'Safe and encrypted payment processing.'
+                : 'Our team is always ready to help.'
+            }}
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CATEGORIES ================= -->
+<section class="py-5">
+  <div class="container">
+    <div class="mb-4">
+      <h2 class="fw-bold">Browse Categories</h2>
+    </div>
+
+    <!-- Loading OR Content -->
+    <ng-container *ngIf="isLoadingCategories; else categoriesContent">
+      <div class="row g-4">
+        <div class="col-md-3 col-sm-6" *ngFor="let i of [1,2,3,4]">
+          <div class="card p-4 text-center loading">
+            <span class="placeholder col-6 mx-auto"></span>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+
+    <ng-template #categoriesContent>
+      <div *ngIf="categories.length > 0; else noCategories" class="row g-4">
+        <div class="col-md-3 col-sm-6" *ngFor="let category of categories | slice:0:8">
+          <div class="card category-card h-100 text-center p-4 border-0 shadow-sm hover-lift">
+            <!-- Category Icon -->
+            <div class="category-icon mb-3">
+              <i 
+                class="bi fs-1 text-red" 
+                [ngClass]="getCategoryIcon(category)"
+              ></i>
+            </div>
+            
+            <!-- Category Name -->
+            <h5 class="fw-bold mb-2">{{ category.name }}</h5>
+            
+            <!-- Category Stats -->
+            <div class="text-muted small mb-3">
+              <div>
+                <i class="bi bi-box me-1"></i>
+                {{ getCategoryProductCount(category) }} products
+              </div>
+              <div *ngIf="category.children?.length">
+                <i class="bi bi-diagram-3 me-1"></i>
+                {{ category.children?.length }} subcategories
+              </div>
+            </div>
+            
+            <!-- Action Button -->
+            <div class="mt-auto">
+              <a
+                [routerLink]="['/products']"
+                [queryParams]="{ category: category.id }"
+                class="btn btn-outline-red btn-sm w-100"
+              >
+                <i class="bi bi-arrow-right me-1"></i> Browse
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <ng-template #noCategories>
+        <div class="text-center py-5">
+          <i class="bi bi-tags display-1 text-muted"></i>
+          <p class="text-muted mt-3">No categories available.</p>
+        </div>
+      </ng-template>
+    </ng-template>
+  </div>
+</section>
+
+<!-- ================= PRODUCTS ================= -->
+<section class="py-5 bg-light-gray">
+  <div class="container">
+    <h2 class="fw-bold mb-4">Featured Products</h2>
+
+    <!-- Loading // Content -->
+    <ng-container *ngIf="isLoadingProducts; else productsContent">
+      <div class="text-center py-5">
+        <div class="spinner-border text-red"></div>
+        <p class="text-muted mt-2">Loading products...</p>
+      </div>
+    </ng-container>
+
+    <ng-template #productsContent>
+      <div *ngIf="products.length > 0; else noProducts" class="row g-4">
+        <div class="col-lg-3 col-md-4 col-sm-6" *ngFor="let product of products">
+          <div class="card h-100 shadow-sm product-card">
+            <!-- Product Image Section -->
+            <div class="product-image position-relative">
+  <!-- Carousel for multiple images -->
+          <div *ngIf="product.images && product.images.length > 1; else singleImage">
+            <div id="carousel-{{product.id}}" class="carousel slide">
+              <div class="carousel-inner">
+                <div 
+                  class="carousel-item" 
+                  [class.active]="i === 0" 
+                  *ngFor="let img of product.images; let i = index"
+                >
+                  <img 
+                    [src]="img.image" 
+                    [alt]="product.name + ' image ' + (i + 1)"
+                    class="d-block w-100"
+                    (error)="handleImageError($event, product)"
+                  >
+                </div>
+              </div>
+              <button class="carousel-control-prev" type="button" [attr.data-bs-target]="'#carousel-' + product.id" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon"></span>
+              </button>
+              <button class="carousel-control-next" type="button" [attr.data-bs-target]="'#carousel-' + product.id" data-bs-slide="next">
+                <span class="carousel-control-next-icon"></span>
+              </button>
+            </div>
+          </div>
+          
+          <ng-template #singleImage>
+            <img 
+              [src]="getProductImage(product)" 
+              [alt]="product.name"
+              class="card-img-top"
+              (error)="handleImageError($event, product)"
+            >
+          </ng-template>
+              
+              <!-- Stock Badge -->
+              <div class="position-absolute top-0 end-0 m-2">
+                <span 
+                  class="badge" 
+                  [ngClass]="product.stock_quantity > 0 ? 'bg-success' : 'bg-danger'"
+                >
+                  {{ product.stock_quantity > 0 ? 'In Stock' : 'Out of Stock' }}
+                </span>
+              </div>
+              
+              <!-- Promotion Badge -->
+              <div *ngIf="product.has_promotion && product.active_promotion" 
+                   class="position-absolute top-0 start-0 m-2">
+                <span class="badge promotion-badge" 
+                      [style.background-color]="product.active_promotion.badge_color">
+                  {{ product.active_promotion.badge_text }}
+                </span>
+              </div>
+              
+              <!-- Category Badge -->
+              <div class="position-absolute" 
+                   [class.top-0]="!product.has_promotion"
+                   [class.bottom-0]="product.has_promotion"
+                   [class.start-0]="true"
+                   [class.m-2]="true">
+                <span class="badge bg-black">
+                  {{ product.category_name }}
+                </span>
+              </div>
+            </div>
+            
+            <!-- Card Body -->
+            <div class="card-body d-flex flex-column">
+              <h6 class="fw-bold card-title">{{ product.name }}</h6>
+              
+              <p class="text-muted small line-clamp-2 flex-grow-1">
+                {{ product.description }}
+              </p>
+              
+              <!-- Price and Action -->
+              <div class="mt-auto">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                  <div class="price-section">
+                    <span *ngIf="product.has_promotion && product.promotional_price" 
+                          class="fw-bold text-danger fs-5 d-block">
+                      ${{ product.promotional_price | number:'1.2-2' }}
+                    </span>
+                    <span [class.text-muted]="product.has_promotion"
+                          [class.text-decoration-line-through]="product.has_promotion"
+                          [class.small]="product.has_promotion"
+                          [class.fw-bold]="!product.has_promotion"
+                          [class.text-danger]="!product.has_promotion"
+                          [class.fs-5]="!product.has_promotion">
+                      ${{ product.price | number:'1.2-2' }}
+                    </span>
+                  </div>
+                  
+                  <span class="text-muted small">
+                    {{ product.stock_quantity }} available
+                  </span>
+                </div>
+                
+                <!-- Savings Display -->
+                <div *ngIf="product.has_promotion && product.discount_percentage" 
+                     class="mb-2">
+                  <small class="text-success fw-semibold">
+                    <i class="bi bi-tag-fill"></i> Save {{ product.discount_percentage | number:'1.0-0' }}%!
+                  </small>
+                </div>
+                
+                <!-- Action Buttons -->
+                <div class="d-grid gap-2">
+                  <button 
+                    class="btn btn-red"
+                    [disabled]="product.stock_quantity === 0"
+                    (click)="addToCart(product)"
+                  >
+                    <i class="bi bi-cart-plus me-1"></i> Add to Cart
+                  </button>
+                  
+                  <a 
+                    [routerLink]="['/products', product.id]"
+                    class="btn btn-outline-red"
+                  >
+                    <i class="bi bi-eye me-1"></i> View Details
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <ng-template #noProducts>
+        <div class="text-center py-5">
+          <i class="bi bi-box-seam display-1 text-muted"></i>
+          <p class="text-muted mt-3">No products found.</p>
+        </div>
+      </ng-template>
+    </ng-template>
+  </div>
+</section>
+
+
+<!-- ================= RECENT ORDERS ================= -->
+<section class="py-5" *ngIf="authService.isAuthenticated()">
+  <div class="container">
+    <h2 class="fw-bold mb-4">Your Recent Orders</h2>
+
+    <div *ngIf="recentOrders.length > 0; else noOrders">
+      <table class="table table-hover">
+        <thead class="bg-black text-white">
+          <tr>
+            <th>#</th>
+            <th>Date</th>
+            <th>Items</th>
+            <th>Total</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let order of recentOrders | slice:0:5">
+            <td>#{{ order.id }}</td>
+            <td>{{ order.created_at | date }}</td>
+            <td>{{ order.items.length }}</td>
+            <td class="text-red fw-bold">${{ order.total_amount }}</td>
+            <td>
+              <span class="badge" [ngClass]="getStatusClass(order.status)">
+                {{ order.status }}
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <ng-template #noOrders>
+      <p class="text-muted">You have no recent orders.</p>
+    </ng-template>
+  </div>
+</section>
+
+

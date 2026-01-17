@@ -1,0 +1,139 @@
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+      <div class="card shadow-sm border-0">
+        <div class="card-body p-4">
+          <!-- Header -->
+          <div class="text-center mb-4">
+            <h2 class="text-black fw-bold mb-3">Create Account</h2>
+            <p class="text-gray">Join Manymor today for the best shopping experience</p>
+          </div>
+
+          <!-- Register Form -->
+          <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+            <div class="row">
+              <div class="mb-3">
+                <label for="phone" class="form-label text-black">Phone Number</label>
+                <input 
+                    type="tel" 
+                    class="form-control" 
+                    id="phone"
+                    formControlName="phone"
+                    [class.is-invalid]="registerForm.get('phone')?.invalid && registerForm.get('phone')?.touched"
+                    placeholder="0770000000"
+                >
+            <div class="invalid-feedback" *ngIf="registerForm.get('phone')?.errors?.['required'] && registerForm.get('phone')?.touched">
+                Phone number is required.
+            </div>
+            <div class="invalid-feedback" *ngIf="registerForm.get('phone')?.errors?.['pattern'] && registerForm.get('phone')?.touched">
+                Please enter a valid Zimbabwean phone number (e.g., 0770000000).
+            </div>
+            <small class="form-text text-gray">
+                Zimbabwean format: 07XXXXXXXX
+            </small>
+            </div>
+              </div>
+            
+
+            <!-- Email -->
+            <div class="mb-3">
+              <label for="email" class="form-label text-black">Email Address</label>
+              <input 
+                type="email" 
+                class="form-control" 
+                id="email"
+                formControlName="email"
+                [class.is-invalid]="registerForm.get('email')?.invalid && registerForm.get('email')?.touched"
+                placeholder="john.doe@example.com"
+              >
+              <div class="invalid-feedback" *ngIf="registerForm.get('email')?.errors?.['required'] && registerForm.get('email')?.touched">
+                Email is required.
+              </div>
+              <div class="invalid-feedback" *ngIf="registerForm.get('email')?.errors?.['email'] && registerForm.get('email')?.touched">
+                Please enter a valid email address.
+              </div>
+            </div>
+
+            <!-- Password -->
+            <div class="mb-3">
+              <label for="password" class="form-label text-black">Password</label>
+              <input 
+                type="password" 
+                class="form-control" 
+                id="password"
+                formControlName="password"
+                [class.is-invalid]="registerForm.get('password')?.invalid && registerForm.get('password')?.touched"
+                placeholder="Create a strong password"
+              >
+              <div class="invalid-feedback" *ngIf="registerForm.get('password')?.errors?.['required'] && registerForm.get('password')?.touched">
+                Password is required.
+              </div>
+              <div class="invalid-feedback" *ngIf="registerForm.get('password')?.errors?.['minlength']">
+                Password must be at least 6 characters long.
+              </div>
+            </div>
+
+            <!-- Confirm Password -->
+            <div class="mb-4">
+              <label for="confirmPassword" class="form-label text-black">Confirm Password</label>
+              <input 
+                type="password" 
+                class="form-control" 
+                id="confirmPassword"
+                formControlName="confirmPassword"
+                [class.is-invalid]="registerForm.hasError('passwordMismatch') && registerForm.get('confirmPassword')?.touched"
+                placeholder="Confirm your password"
+              >
+              <div class="invalid-feedback" *ngIf="registerForm.hasError('passwordMismatch')">
+                Passwords do not match.
+              </div>
+            </div>
+
+            <!-- Terms & Conditions -->
+            <div class="form-check mb-4">
+              <input 
+                class="form-check-input" 
+                type="checkbox" 
+                id="terms" 
+                formControlName="terms"
+                [class.is-invalid]="registerForm.get('terms')?.invalid && registerForm.get('terms')?.touched"
+              >
+              <label class="form-check-label text-gray" for="terms">
+                I agree to the <a href="#" class="text-red">Terms & Conditions</a> and <a href="#" class="text-red">Privacy Policy</a>
+              </label>
+              <div class="invalid-feedback" *ngIf="registerForm.get('terms')?.invalid && registerForm.get('terms')?.touched">
+                You must accept the terms and conditions.
+              </div>
+            </div>
+
+            <!-- Submit Button -->
+            <button 
+              type="submit" 
+              class="btn btn-red w-100 py-2 mb-3"
+              [disabled]="registerForm.invalid || isLoading"
+            >
+              <span *ngIf="!isLoading">Create Account</span>
+              <span *ngIf="isLoading">
+                <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                Creating Account...
+              </span>
+            </button>
+
+            <!-- Error Message -->
+            <div *ngIf="errorMessage" class="alert alert-danger mt-3">
+              {{ errorMessage }}
+            </div>
+
+            <!-- Login Link -->
+            <div class="text-center mt-4">
+              <p class="text-gray">
+                Already have an account? 
+                <a routerLink="/login" class="text-red fw-semibold text-decoration-none">Sign In</a>
+              </p>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

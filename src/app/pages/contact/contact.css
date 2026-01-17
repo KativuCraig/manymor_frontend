@@ -1,0 +1,83 @@
+/* Contact Page Styles */
+
+.contact-page {
+  min-height: 100vh;
+}
+
+.hero-section {
+  background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
+}
+
+.text-gray {
+  color: #9ca3af;
+}
+
+.icon-wrapper {
+  width: 50px;
+  height: 50px;
+  flex-shrink: 0;
+}
+
+.info-item {
+  padding: 1rem;
+  border-radius: 0.5rem;
+  transition: background-color 0.3s ease;
+}
+
+.info-item:hover {
+  background-color: rgba(0, 0, 0, 0.02);
+}
+
+.card {
+  transition: box-shadow 0.3s ease;
+}
+
+.card:hover {
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1) !important;
+}
+
+.form-control:focus {
+  border-color: var(--primary-red);
+  box-shadow: 0 0 0 0.2rem rgba(220, 38, 38, 0.25);
+}
+
+.accordion-button:not(.collapsed) {
+  color: var(--primary-red);
+  background-color: rgba(220, 38, 38, 0.1);
+}
+
+.accordion-button:focus {
+  border-color: var(--primary-red);
+  box-shadow: 0 0 0 0.2rem rgba(220, 38, 38, 0.25);
+}
+
+.social-links a {
+  transition: all 0.3s ease;
+}
+
+.social-links a:hover {
+  background-color: var(--primary-red);
+  color: white;
+  border-color: var(--primary-red);
+  transform: translateY(-2px);
+}
+
+.map-placeholder {
+  background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .hero-section h1 {
+    font-size: 2rem;
+  }
+
+  .contact-info {
+    margin-bottom: 2rem;
+  }
+
+  .icon-wrapper {
+    width: 40px;
+    height: 40px;
+  }
+}

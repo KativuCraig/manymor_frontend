@@ -1,0 +1,325 @@
+<!-- Admin Products Management -->
+<div class="container-fluid py-4">
+  <!-- Page Header -->
+  <div class="row mb-4">
+    <div class="col">
+      <h1 class="text-black fw-bold mb-2">Products Management</h1>
+      <p class="text-gray mb-0">Manage your store's product catalog</p>
+    </div>
+    <div class="col-auto">
+      <button class="btn btn-danger" (click)="openCreateModal()">
+        <i class="bi bi-plus-circle me-2"></i> Add New Product
+      </button>
+    </div>
+  </div>
+
+  <!-- Filters Section -->
+  <div class="card border-0 shadow-sm mb-4">
+    <div class="card-body">
+      <div class="row g-3">
+        <!-- Search -->
+        <div class="col-md-4">
+          <label class="form-label text-gray small fw-bold">Search Products</label>
+          <input 
+            type="text" 
+            class="form-control" 
+            placeholder="Search by name or description..."
+            [(ngModel)]="searchTerm"
+            (ngModelChange)="onSearchChange()">
+        </div>
+
+        <!-- Category Filter -->
+        <div class="col-md-4">
+          <label class="form-label text-gray small fw-bold">Category</label>
+          <select 
+            class="form-select" 
+            [(ngModel)]="selectedCategory"
+            (ngModelChange)="onCategoryChange()">
+            <option [ngValue]="null">All Categories</option>
+            <option *ngFor="let cat of categories" [ngValue]="cat.id">{{ cat.name }}</option>
+          </select>
+        </div>
+
+        <!-- Stock Filter -->
+        <div class="col-md-4">
+          <label class="form-label text-gray small fw-bold">Stock Status</label>
+          <select 
+            class="form-select" 
+            [(ngModel)]="stockFilter"
+            (ngModelChange)="onStockFilterChange()">
+            <option value="all">All Products</option>
+            <option value="in_stock">In Stock</option>
+            <option value="low_stock">Low Stock</option>
+            <option value="out_of_stock">Out of Stock</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="text-center py-5">
+    <div class="spinner-border text-danger" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <p class="text-gray mt-2">Loading products...</p>
+  </div>
+
+  <!-- Products Table -->
+  <div *ngIf="!isLoading" class="card border-0 shadow-sm">
+    <div class="card-header bg-white border-0">
+      <div class="d-flex justify-content-between align-items-center">
+        <h5 class="text-black fw-bold mb-0">
+          Products ({{ filteredProducts.length }})
+        </h5>
+      </div>
+    </div>
+    <div class="card-body p-0">
+      <div *ngIf="filteredProducts.length === 0" class="text-center py-5">
+        <i class="bi bi-box-seam text-gray display-4 mb-3"></i>
+        <p class="text-gray">No products found</p>
+      </div>
+
+      <div *ngIf="filteredProducts.length > 0" class="table-responsive">
+        <table class="table table-hover mb-0">
+          <thead class="bg-light">
+            <tr>
+              <th class="text-gray small fw-bold text-uppercase">Product</th>
+              <th class="text-gray small fw-bold text-uppercase">Category</th>
+              <th class="text-gray small fw-bold text-uppercase">Price</th>
+              <th class="text-gray small fw-bold text-uppercase">Stock</th>
+              <th class="text-gray small fw-bold text-uppercase">Status</th>
+              <th class="text-gray small fw-bold text-uppercase text-center">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let product of filteredProducts">
+              <!-- Product Info -->
+              <td>
+                <div class="d-flex align-items-center">
+                  <img 
+                    [src]="getProductImage(product)" 
+                    alt="{{ product.name }}"
+                    class="product-thumbnail me-3"
+                    onerror="this.src='assets/placeholder.png'">
+                  <div>
+                    <h6 class="text-black mb-0">{{ product.name }}</h6>
+                    <p class="text-gray small mb-0">{{ product.description | slice:0:50 }}...</p>
+                  </div>
+                </div>
+              </td>
+
+              <!-- Category -->
+              <td class="align-middle">
+                <span class="badge bg-info bg-opacity-10 text-info">
+                  {{ product.category_name }}
+                </span>
+              </td>
+
+              <!-- Price -->
+              <td class="align-middle">
+                <span class="text-black fw-bold">${{ product.price }}</span>
+              </td>
+
+              <!-- Stock -->
+              <td class="align-middle">
+                <div>
+                  <span [class]="'fw-bold ' + getStockStatusClass(product.stock_quantity)">
+                    {{ product.stock_quantity }}
+                  </span>
+                  <br>
+                  <small [class]="getStockStatusClass(product.stock_quantity)">
+                    {{ getStockStatusText(product.stock_quantity) }}
+                  </small>
+                </div>
+              </td>
+
+              <!-- Status -->
+              <td class="align-middle">
+                <span [class]="'badge ' + (product.is_active ? 'bg-success' : 'bg-secondary')">
+                  {{ product.is_active ? 'Active' : 'Inactive' }}
+                </span>
+              </td>
+
+              <!-- Actions -->
+              <td class="align-middle text-center">
+                <div class="btn-group" role="group">
+                  <button 
+                    class="btn btn-sm btn-outline-primary"
+                    (click)="openEditModal(product)"
+                    title="Edit Product">
+                    <i class="bi bi-pencil"></i>
+                  </button>
+                  <button 
+                    class="btn btn-sm btn-outline-danger"
+                    (click)="deleteProduct(product)"
+                    title="Delete Product">
+                    <i class="bi bi-trash"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Product Modal -->
+<div class="modal fade" [class.show]="showProductModal" [style.display]="showProductModal ? 'block' : 'none'" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title text-black fw-bold">
+          {{ isEditMode ? 'Edit Product' : 'Create New Product' }}
+        </h5>
+        <button type="button" class="btn-close" (click)="closeModal()"></button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="row g-3">
+            <!-- Product Name -->
+            <div class="col-12">
+              <label class="form-label text-gray small fw-bold">Product Name *</label>
+              <input 
+                type="text" 
+                class="form-control" 
+                [(ngModel)]="productForm.name"
+                name="name"
+                placeholder="Enter product name"
+                required>
+            </div>
+
+            <!-- Description -->
+            <div class="col-12">
+              <label class="form-label text-gray small fw-bold">Description *</label>
+              <textarea 
+                class="form-control" 
+                rows="3"
+                [(ngModel)]="productForm.description"
+                name="description"
+                placeholder="Enter product description"
+                required></textarea>
+            </div>
+
+            <!-- Price -->
+            <div class="col-md-4">
+              <label class="form-label text-gray small fw-bold">Price ($) *</label>
+              <input 
+                type="number" 
+                class="form-control" 
+                [(ngModel)]="productForm.price"
+                name="price"
+                min="0"
+                step="0.01"
+                placeholder="0.00"
+                required>
+            </div>
+
+            <!-- Stock Quantity -->
+            <div class="col-md-4">
+              <label class="form-label text-gray small fw-bold">Stock Quantity *</label>
+              <input 
+                type="number" 
+                class="form-control" 
+                [(ngModel)]="productForm.stock_quantity"
+                name="stock_quantity"
+                min="0"
+                placeholder="0"
+                required>
+            </div>
+
+            <!-- Category -->
+            <div class="col-md-4">
+              <label class="form-label text-gray small fw-bold">Category *</label>
+              <select 
+                class="form-select" 
+                [(ngModel)]="productForm.category"
+                name="category"
+                required>
+                <option [ngValue]="0">Select Category</option>
+                <option *ngFor="let cat of categories" [ngValue]="cat.id">{{ cat.name }}</option>
+              </select>
+            </div>
+
+            <!-- Active Status -->
+            <div class="col-12">
+              <div class="form-check form-switch">
+                <input 
+                  class="form-check-input" 
+                  type="checkbox" 
+                  id="isActive"
+                  [(ngModel)]="productForm.is_active"
+                  name="is_active">
+                <label class="form-check-label text-gray" for="isActive">
+                  Product is Active
+                </label>
+              </div>
+            </div>
+
+            <!-- Product Images -->
+            <div class="col-12">
+              <label class="form-label text-gray small fw-bold">Product Images</label>
+              
+              <!-- Existing Images (Edit Mode) -->
+              <div *ngIf="isEditMode && selectedProduct && selectedProduct.images.length > 0" class="mb-3">
+                <p class="small text-muted mb-2">Current Images:</p>
+                <div class="row g-2">
+                  <div *ngFor="let image of selectedProduct.images" class="col-auto">
+                    <div class="image-preview-item">
+                      <img [src]="image.image" alt="Product" class="img-thumbnail" style="width: 80px; height: 80px; object-fit: cover;">
+                    </div>
+                  </div>
+                </div>
+                <p class="small text-info mt-2">
+                  <i class="bi bi-info-circle me-1"></i>
+                  Uploading new images will add to existing images
+                </p>
+              </div>
+
+              <!-- Image Upload -->
+              <input 
+                type="file" 
+                class="form-control" 
+                accept="image/*"
+                multiple
+                (change)="onImageSelect($event)"
+                #fileInput>
+              <small class="text-muted d-block mt-1">You can select multiple images</small>
+
+              <!-- Image Previews -->
+              <div *ngIf="imagePreviewUrls.length > 0" class="mt-3">
+                <p class="small text-muted mb-2">New Images to Upload:</p>
+                <div class="row g-2">
+                  <div *ngFor="let url of imagePreviewUrls; let i = index" class="col-auto">
+                    <div class="position-relative image-preview-item">
+                      <img [src]="url" alt="Preview" class="img-thumbnail" style="width: 80px; height: 80px; object-fit: cover;">
+                      <button 
+                        type="button" 
+                        class="btn btn-sm btn-danger position-absolute top-0 end-0 m-1 p-1"
+                        (click)="removeImagePreview(i)"
+                        style="font-size: 0.7rem; line-height: 1;">
+                        <i class="bi bi-x"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeModal()" [disabled]="isSaving">
+          Cancel
+        </button>
+        <button type="button" class="btn btn-danger" (click)="saveProduct()" [disabled]="isSaving">
+          <span *ngIf="isSaving" class="spinner-border spinner-border-sm me-2"></span>
+          {{ isEditMode ? 'Update Product' : 'Create Product' }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal-backdrop fade" [class.show]="showProductModal" *ngIf="showProductModal"></div>

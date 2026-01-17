@@ -1,0 +1,253 @@
+/* Card Styles */
+.card {
+  border-radius: 12px;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  background: var(--primary-white);
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15) !important;
+}
+
+.card-body {
+  position: relative;
+}
+
+/* Header Styles */
+.card-body h2 {
+  font-size: 2rem;
+  letter-spacing: -0.5px;
+  position: relative;
+  display: inline-block;
+}
+
+.card-body h2::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 3px;
+  background: linear-gradient(90deg, var(--primary-red), #cc0000);
+  border-radius: 2px;
+}
+
+.card-body p.text-gray {
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+/* Form Styles */
+.form-label {
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.form-control {
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  transition: all 0.3s ease;
+  font-size: 0.95rem;
+}
+
+.form-control:focus {
+  border-color: var(--primary-red);
+  box-shadow: 0 0 0 0.25rem rgba(255, 0, 0, 0.15);
+  transform: translateY(-1px);
+}
+
+.form-control::placeholder {
+  color: #adb5bd;
+  font-size: 0.9rem;
+}
+
+.form-control.is-invalid {
+  border-color: var(--danger);
+}
+
+.form-control.is-invalid:focus {
+  box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.15);
+}
+
+/* Invalid Feedback */
+.invalid-feedback {
+  font-size: 0.85rem;
+  margin-top: 0.25rem;
+}
+
+/* Remember Me & Forgot Password */
+.form-check {
+  padding-left: 1.75rem;
+}
+
+.form-check-input {
+  width: 1.2rem;
+  height: 1.2rem;
+  margin-top: 0.15rem;
+  border: 2px solid #dee2e6;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.form-check-input:checked {
+  background-color: var(--primary-red);
+  border-color: var(--primary-red);
+}
+
+.form-check-input:focus {
+  box-shadow: 0 0 0 0.25rem rgba(255, 0, 0, 0.15);
+}
+
+.form-check-label {
+  cursor: pointer;
+  user-select: none;
+  font-size: 0.9rem;
+}
+
+a.text-red {
+  font-weight: 500;
+  transition: all 0.2s ease;
+  font-size: 0.9rem;
+}
+
+a.text-red:hover {
+  color: #cc0000 !important;
+  text-decoration: underline !important;
+}
+
+/* Submit Button */
+.btn-red {
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1rem;
+  letter-spacing: 0.3px;
+  transition: all 0.3s ease;
+  border: none;
+  box-shadow: 0 4px 12px rgba(255, 0, 0, 0.2);
+}
+
+.btn-red:hover:not(:disabled) {
+  background-color: #cc0000;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 0, 0, 0.3);
+}
+
+.btn-red:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.btn-red:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* Spinner */
+.spinner-border-sm {
+  width: 1rem;
+  height: 1rem;
+  border-width: 0.15em;
+}
+
+/* Alert Messages */
+.alert {
+  border-radius: 8px;
+  border: none;
+  font-size: 0.9rem;
+}
+
+.alert-danger {
+  background-color: rgba(220, 53, 69, 0.1);
+  color: var(--danger);
+  border-left: 4px solid var(--danger);
+}
+
+/* Sign Up Link */
+.text-center p {
+  font-size: 0.95rem;
+}
+
+.text-center a.fw-semibold {
+  font-weight: 600 !important;
+  transition: all 0.2s ease;
+}
+
+.text-center a.fw-semibold:hover {
+  color: #cc0000 !important;
+  transform: translateX(2px);
+  display: inline-block;
+}
+
+/* Decorative Elements */
+.card-body::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(90deg, var(--primary-red), #cc0000, var(--primary-black));
+  border-radius: 12px 12px 0 0;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .card-body h2 {
+    font-size: 1.75rem;
+  }
+  
+  .card-body {
+    padding: 2rem 1.5rem !important;
+  }
+  
+  .form-control {
+    font-size: 1rem;
+  }
+  
+  .btn-red {
+    padding: 0.75rem !important;
+  }
+}
+
+@media (max-width: 576px) {
+  .container {
+    padding: 2rem 1rem;
+  }
+  
+  .card-body h2 {
+    font-size: 1.5rem;
+  }
+  
+  .d-flex.justify-content-between {
+    flex-direction: column;
+    align-items: flex-start !important;
+    gap: 0.75rem;
+  }
+}
+
+/* Loading State Animation */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.btn-red:disabled .spinner-border {
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+/* Focus Visible States for Accessibility */
+.form-check-input:focus-visible,
+.form-control:focus-visible,
+.btn:focus-visible {
+  outline: 2px solid var(--primary-red);
+  outline-offset: 2px;
+}

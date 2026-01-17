@@ -1,0 +1,186 @@
+/* Cart Page Styles */
+.cart-item-row {
+  transition: all 0.3s ease;
+}
+
+.cart-item-row:hover {
+  background-color: rgba(255, 0, 0, 0.05);
+}
+
+.cart-item-image img {
+  border: 2px solid transparent;
+  transition: border-color 0.3s ease;
+}
+
+.cart-item-row:hover .cart-item-image img {
+  border-color: var(--primary-red);
+}
+
+.quantity-controls .form-control {
+  width: 60px;
+  text-align: center;
+}
+
+.quantity-controls .form-control:focus {
+  border-color: var(--primary-red);
+  box-shadow: 0 0 0 0.25rem rgba(255, 0, 0, 0.25);
+}
+
+.empty-cart-icon {
+  opacity: 0.5;
+}
+
+/* Sticky order summary */
+.sticky-top {
+  z-index: 1;
+}
+
+/* Loading overlay */
+.cart-loading {
+  position: relative;
+  min-height: 200px;
+}
+
+.cart-loading::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Table responsive */
+@media (max-width: 768px) {
+  .table-responsive {
+    border: 0;
+  }
+  
+  .cart-item-row {
+    display: block;
+    border: 1px solid var(--primary-gray);
+    border-radius: 0.5rem;
+    margin-bottom: 1rem;
+    padding: 1rem;
+  }
+  
+  .cart-item-row td {
+    display: block;
+    text-align: left !important;
+    border: none;
+    padding: 0.5rem 0;
+  }
+  
+  .cart-item-row td:before {
+    content: attr(data-label);
+    font-weight: bold;
+    display: block;
+    color: var(--primary-black);
+    margin-bottom: 0.25rem;
+  }
+  
+  .cart-item-image {
+    margin-bottom: 1rem;
+  }
+  
+  .quantity-controls {
+    justify-content: center;
+  }
+}
+
+/* Badge styles */
+.badge {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+/* Button loading states */
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Alert styles */
+.alert {
+  border-radius: 0.5rem;
+  border: none;
+}
+
+.alert-warning {
+  background-color: rgba(255, 193, 7, 0.1);
+  color: #856404;
+}
+
+.alert-info {
+  background-color: rgba(23, 162, 184, 0.1);
+  color: #0c5460;
+}
+
+/* Payment badges */
+.badge.bg-light {
+  transition: all 0.3s ease;
+}
+
+.badge.bg-light:hover {
+  background-color: var(--primary-red) !important;
+  color: var(--primary-white) !important;
+}
+
+
+/* Add visual feedback for updating items */
+.updating {
+  opacity: 0.7;
+  position: relative;
+}
+
+.updating::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.5);
+  z-index: 1;
+}
+
+/* Improve button feedback */
+button:not(:disabled) {
+  transition: all 0.2s ease;
+}
+
+button:not(:disabled):hover {
+  transform: translateY(-1px);
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* Quantity input styling */
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Cart badge animation */
+@keyframes badgePulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+.cart-badge-update {
+  animation: badgePulse 0.3s ease;
+}

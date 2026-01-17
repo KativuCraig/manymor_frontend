@@ -1,0 +1,52 @@
+/* About Page Styles */
+
+.about-page {
+  min-height: 100vh;
+}
+
+.hero-section {
+  background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
+}
+
+.text-gray {
+  color: #9ca3af;
+}
+
+.icon-wrapper {
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.timeline-marker {
+  font-size: 0.875rem;
+  flex-shrink: 0;
+}
+
+.timeline-content {
+  flex-grow: 1;
+}
+
+.card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .hero-section h1 {
+    font-size: 2rem;
+  }
+
+  .timeline-marker {
+    width: 50px !important;
+    height: 50px !important;
+    min-width: 50px !important;
+    font-size: 0.75rem;
+  }
+}

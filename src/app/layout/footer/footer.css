@@ -1,0 +1,24 @@
+footer {
+  border-top: 3px solid var(--primary-red);
+}
+
+.border-gray {
+  border-color: var(--primary-gray) !important;
+}
+
+.social-links a {
+  transition: color 0.3s ease;
+}
+
+.social-links a:hover {
+  color: var(--primary-red) !important;
+}
+
+.list-unstyled a {
+  transition: all 0.3s ease;
+}
+
+.list-unstyled a:hover {
+  color: var(--primary-red) !important;
+  padding-left: 5px;
+}

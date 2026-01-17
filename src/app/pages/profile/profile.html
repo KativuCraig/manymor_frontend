@@ -1,0 +1,238 @@
+<div class="profile-container">
+  <!-- Header -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h2 class="mb-1">My Profile</h2>
+      <p class="text-muted mb-0">Manage your account information and addresses</p>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="text-center py-5">
+    <div class="spinner-border text-danger" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <p class="text-muted mt-3">Loading profile...</p>
+  </div>
+
+  <!-- Profile Content -->
+  <div *ngIf="!isLoading && profile" class="row">
+    <!-- Profile Information -->
+    <div class="col-lg-4 mb-4">
+      <div class="card shadow-sm">
+        <div class="card-body text-center">
+          <div class="profile-avatar mb-3">
+            <i class="bi bi-person-circle"></i>
+          </div>
+          <h4 class="mb-1">{{ profile.first_name }} {{ profile.last_name }}</h4>
+          <p class="text-muted mb-3">{{ profile.email }}</p>
+          <span class="badge bg-danger mb-3">{{ profile.role }}</span>
+          
+          <div class="profile-info mt-4 text-start">
+            <div class="mb-3">
+              <label class="text-muted small">Phone Number</label>
+              <p class="mb-0">{{ profile.phone_number || 'Not provided' }}</p>
+            </div>
+            <div class="mb-3">
+              <label class="text-muted small">Member Since</label>
+              <p class="mb-0">{{ formatDate(profile.date_joined) }}</p>
+            </div>
+          </div>
+          
+          <button class="btn btn-danger w-100 mt-3" (click)="openEditProfileModal()">
+            <i class="bi bi-pencil me-2"></i>
+            Edit Profile
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Addresses Section -->
+    <div class="col-lg-8">
+      <div class="card shadow-sm">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <h5 class="mb-0">Saved Addresses</h5>
+          <button class="btn btn-sm btn-danger" (click)="openAddressModal('create')">
+            <i class="bi bi-plus-lg me-1"></i>
+            Add Address
+          </button>
+        </div>
+        <div class="card-body">
+          <div *ngIf="addresses.length === 0" class="text-center py-5">
+            <i class="bi bi-house-add text-muted" style="font-size: 3rem;"></i>
+            <p class="text-muted mt-3">No addresses saved yet</p>
+            <button class="btn btn-outline-danger" (click)="openAddressModal('create')">
+              Add Your First Address
+            </button>
+          </div>
+          
+          <div *ngIf="addresses.length > 0" class="row">
+            <div *ngFor="let address of addresses" class="col-md-6 mb-3">
+              <div class="address-card p-3 border rounded position-relative">
+                <div *ngIf="address.is_default" class="position-absolute top-0 end-0">
+                  <span class="badge bg-success m-2">Default</span>
+                </div>
+                
+                <div class="address-content">
+                  <p class="mb-1"><strong>{{ address.label }}</strong></p>
+                  <p class="mb-1">{{ address.address_line }}</p>
+                  <p class="mb-0">{{ address.city }}</p>
+                </div>
+                
+                <div class="address-actions mt-3">
+                  <button 
+                    class="btn btn-sm btn-outline-danger me-2" 
+                    (click)="openAddressModal('edit', address)">
+                    <i class="bi bi-pencil"></i>
+                  </button>
+                  <button 
+                    class="btn btn-sm btn-outline-danger" 
+                    (click)="deleteAddress(address.id)"
+                    [disabled]="address.is_default">
+                    <i class="bi bi-trash"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Edit Profile Modal -->
+<div class="modal" [class.show]="showEditProfileModal" [style.display]="showEditProfileModal ? 'block' : 'none'" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Edit Profile</h5>
+        <button type="button" class="btn-close" (click)="closeEditProfileModal()"></button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="mb-3">
+            <label class="form-label">Email</label>
+            <input 
+              type="email" 
+              class="form-control" 
+              [(ngModel)]="editProfileForm.email"
+              name="email"
+              disabled>
+            <small class="text-muted">Email cannot be changed</small>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">First Name *</label>
+            <input 
+              type="text" 
+              class="form-control" 
+              [(ngModel)]="editProfileForm.first_name"
+              name="first_name"
+              required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Last Name *</label>
+            <input 
+              type="text" 
+              class="form-control" 
+              [(ngModel)]="editProfileForm.last_name"
+              name="last_name"
+              required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Phone Number</label>
+            <input 
+              type="tel" 
+              class="form-control" 
+              [(ngModel)]="editProfileForm.phone_number"
+              name="phone_number">
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" (click)="closeEditProfileModal()">
+          Cancel
+        </button>
+        <button 
+          type="button" 
+          class="btn btn-danger" 
+          (click)="saveProfile()"
+          [disabled]="isLoading">
+          {{ isLoading ? 'Saving...' : 'Save Changes' }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Address Modal -->
+<div class="modal" [class.show]="showAddressModal" [style.display]="showAddressModal ? 'block' : 'none'" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{{ addressModalMode === 'create' ? 'Add New Address' : 'Edit Address' }}</h5>
+        <button type="button" class="btn-close" (click)="closeAddressModal()"></button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="mb-3">
+            <label class="form-label">Label *</label>
+            <input 
+              type="text" 
+              class="form-control" 
+              [(ngModel)]="addressForm.label"
+              name="label"
+              placeholder="e.g., Home, Work, Office"
+              required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Address Line *</label>
+            <input 
+              type="text" 
+              class="form-control" 
+              [(ngModel)]="addressForm.address_line"
+              name="address_line"
+              placeholder="123 Main Street, Apt 4B"
+              required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">City *</label>
+            <input 
+              type="text" 
+              class="form-control" 
+              [(ngModel)]="addressForm.city"
+              name="city"
+              required>
+          </div>
+          <div class="form-check">
+            <input 
+              class="form-check-input" 
+              type="checkbox" 
+              [(ngModel)]="addressForm.is_default"
+              name="is_default"
+              id="isDefaultCheck">
+            <label class="form-check-label" for="isDefaultCheck">
+              Set as default address
+            </label>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" (click)="closeAddressModal()">
+          Cancel
+        </button>
+        <button 
+          type="button" 
+          class="btn btn-danger" 
+          (click)="saveAddress()"
+          [disabled]="isLoading">
+          {{ isLoading ? 'Saving...' : (addressModalMode === 'create' ? 'Add Address' : 'Update Address') }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Backdrop -->
+<div class="modal-backdrop fade" [class.show]="showEditProfileModal || showAddressModal" 
+     *ngIf="showEditProfileModal || showAddressModal"></div>

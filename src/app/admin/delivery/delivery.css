@@ -1,0 +1,180 @@
+/* Delivery Management Styles */
+
+.delivery-card {
+  transition: transform 0.2s ease;
+}
+
+.delivery-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* Delivery Progress Steps */
+.delivery-progress {
+  padding: 1rem 0;
+}
+
+.progress-steps {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  position: relative;
+}
+
+.progress-step {
+  flex: 1;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
+
+.progress-step:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  right: -50%;
+  height: 2px;
+  background-color: #e0e0e0;
+  z-index: -1;
+}
+
+.progress-step.active:not(:last-child)::after {
+  background-color: var(--primary-red);
+}
+
+.step-icon {
+  width: 40px;
+  height: 40px;
+  margin: 0 auto 0.5rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #e0e0e0;
+  color: #999;
+  font-size: 1.2rem;
+  transition: all 0.3s ease;
+}
+
+.progress-step.active .step-icon {
+  background-color: var(--primary-red);
+  color: white;
+}
+
+.progress-step.current .step-icon {
+  box-shadow: 0 0 0 4px rgba(255, 0, 0, 0.2);
+  animation: pulse 2s infinite;
+}
+
+.step-label {
+  font-size: 0.75rem;
+  color: #999;
+  font-weight: 500;
+}
+
+.progress-step.active .step-label {
+  color: var(--primary-red);
+  font-weight: 600;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    box-shadow: 0 0 0 4px rgba(255, 0, 0, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgba(255, 0, 0, 0.1);
+  }
+}
+
+/* Delivery Info */
+.delivery-info {
+  border-top: 1px solid #e0e0e0;
+  border-bottom: 1px solid #e0e0e0;
+  padding: 1rem 0;
+}
+
+.order-summary {
+  background-color: #f8f9fa;
+}
+
+/* Modal Styles */
+.modal.show {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-backdrop.show {
+  opacity: 0.5;
+}
+
+/* Badge Styles */
+.badge {
+  padding: 0.5rem 1rem;
+  font-weight: 500;
+}
+
+.bg-info {
+  background-color: #17a2b8 !important;
+}
+
+.bg-primary {
+  background-color: #0d6efd !important;
+}
+
+.bg-warning {
+  background-color: #ffc107 !important;
+  color: #000 !important;
+}
+
+.bg-success {
+  background-color: #28a745 !important;
+}
+
+/* Form Styles */
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--primary-red);
+  box-shadow: 0 0 0 0.25rem rgba(255, 0, 0, 0.1);
+}
+
+/* Button Styles */
+.btn-danger {
+  background-color: var(--primary-red);
+  border-color: var(--primary-red);
+}
+
+.btn-danger:hover {
+  background-color: #cc0000;
+  border-color: #cc0000;
+}
+
+.btn-danger:disabled {
+  background-color: #999;
+  border-color: #999;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .progress-steps {
+    flex-wrap: wrap;
+  }
+  
+  .progress-step {
+    flex: 0 0 50%;
+    margin-bottom: 1rem;
+  }
+  
+  .progress-step:not(:last-child)::after {
+    display: none;
+  }
+  
+  .step-icon {
+    width: 35px;
+    height: 35px;
+    font-size: 1rem;
+  }
+  
+  .step-label {
+    font-size: 0.7rem;
+  }
+}

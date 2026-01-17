@@ -1,1 +1,264 @@
-/* You can add global styles to this file, and also import other style files */
+/* Global Styles */
+@import 'ngx-toastr/toastr';
+
+:root {
+  /* Primary Colors */
+  --primary-red: #ff0000;
+  --primary-black: #000000;
+  --primary-white: #ffffff;
+  --primary-gray: #6c757d;
+  --light-gray: #f8f9fa;
+  --dark-gray: #343a40;
+  
+  /* UI Colors */
+  --danger: #dc3545;
+  --success: #28a745;
+  --warning: #ffc107;
+  --info: #17a2b8;
+}
+
+/* Global Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: var(--primary-white);
+  color: var(--primary-black);
+  line-height: 1.6;
+}
+
+/* Utility Classes */
+.bg-red { background-color: var(--primary-red) !important; }
+.text-red { color: var(--primary-red) !important; }
+.bg-black { background-color: var(--primary-black) !important; }
+.text-black { color: var(--primary-black) !important; }
+.bg-white { background-color: var(--primary-white) !important; }
+.text-white { color: var(--primary-white) !important; }
+.text-gray { color: var(--primary-gray) !important; }
+.bg-gray { background-color: var(--primary-gray) !important; }
+
+.btn-red {
+  background-color: var(--primary-red);
+  border-color: var(--primary-red);
+  color: var(--primary-white);
+  transition: all 0.3s ease;
+}
+
+.btn-red:hover {
+  background-color: #cc0000;
+  border-color: #cc0000;
+  color: var(--primary-white);
+}
+
+.btn-outline-red {
+  border-color: var(--primary-red);
+  color: var(--primary-red);
+  transition: all 0.3s ease;
+}
+
+.btn-outline-red:hover {
+  background-color: var(--primary-red);
+  border-color: var(--primary-red);
+  color: var(--primary-white);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--light-gray);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--primary-gray);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-red);
+}
+
+
+
+.bg-light-gray {
+  background-color: var(--light-gray) !important;
+}
+
+.border-gray {
+  border-color: var(--primary-gray) !important;
+}
+
+.shadow-sm {
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075) !important;
+}
+
+.shadow {
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+}
+
+.rounded-3 {
+  border-radius: 0.75rem !important;
+}
+
+/* Table styles */
+.table-hover tbody tr:hover {
+  background-color: rgba(255, 0, 0, 0.05);
+}
+
+/* Code styling */
+code {
+  font-family: 'Courier New', monospace;
+}
+
+/* Responsive images */
+.img-fluid {
+  max-width: 100%;
+  height: auto;
+}
+
+
+/* Additional utility classes */
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.object-fit-cover {
+  object-fit: cover;
+}
+
+.object-fit-contain {
+  object-fit: contain;
+}
+
+/* Page transitions */
+.fade-in {
+  animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Scrollbar for filters */
+.filters-scroll {
+  max-height: calc(100vh - 200px);
+  overflow-y: auto;
+}
+
+/* Custom scrollbar for filters */
+.filters-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+
+.filters-scroll::-webkit-scrollbar-track {
+  background: var(--light-gray);
+}
+
+.filters-scroll::-webkit-scrollbar-thumb {
+  background: var(--primary-gray);
+  border-radius: 3px;
+}
+
+.filters-scroll::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-red);
+}
+
+
+/* Carousel Custom Styles */
+.carousel {
+  position: relative;
+}
+
+.carousel-inner {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
+.carousel-item {
+  position: relative;
+  display: none;
+  float: left;
+  width: 100%;
+  margin-right: -100%;
+  backface-visibility: hidden;
+  transition: transform 0.6s ease-in-out;
+}
+
+.carousel-item.active,
+.carousel-item-next,
+.carousel-item-prev {
+  display: block;
+}
+
+.carousel-indicators {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 2;
+  display: flex;
+  justify-content: center;
+  padding: 0;
+  margin-right: 15%;
+  margin-bottom: 1rem;
+  margin-left: 15%;
+  list-style: none;
+}
+
+.carousel-control-prev,
+.carousel-control-next {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 15%;
+  padding: 0;
+  color: #fff;
+  text-align: center;
+  background: none;
+  border: 0;
+  opacity: 0.5;
+  transition: opacity 0.15s ease;
+}
+
+.carousel-control-prev:hover,
+.carousel-control-next:hover {
+  color: #fff;
+  text-decoration: none;
+  outline: 0;
+  opacity: 0.9;
+}
+
+
+/* Admin Specific Styles */
+.admin-badge {
+  background-color: var(--primary-red);
+  color: var(--primary-white);
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+/* Status Badges */
+.status-badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.status-placed { background-color: var(--info); color: var(--primary-white); }
+.status-packed { background-color: var(--primary); color: var(--primary-white); }
+.status-dispatched { background-color: var(--warning); color: var(--primary-black); }
+.status-in-transit { background-color: var(--warning); color: var(--primary-black); }
+.status-delivered { background-color: var(--success); color: var(--primary-white); }

@@ -1,0 +1,209 @@
+<!-- Admin Delivery Management -->
+<div class="container-fluid py-4">
+  <!-- Page Header -->
+  <div class="row mb-4">
+    <div class="col">
+      <h1 class="text-black fw-bold mb-2">Delivery Management</h1>
+      <p class="text-gray mb-0">Track and update order delivery status</p>
+    </div>
+  </div>
+
+  <!-- Filters Section -->
+  <div class="card border-0 shadow-sm mb-4">
+    <div class="card-body">
+      <div class="row g-3">
+        <!-- Search -->
+        <div class="col-md-6">
+          <label class="form-label text-gray small fw-bold">Search Orders</label>
+          <input 
+            type="text" 
+            class="form-control" 
+            placeholder="Search by order ID or status..."
+            [(ngModel)]="searchTerm"
+            (ngModelChange)="onSearchChange()">
+        </div>
+
+        <!-- Status Filter -->
+        <div class="col-md-6">
+          <label class="form-label text-gray small fw-bold">Delivery Status</label>
+          <select 
+            class="form-select" 
+            [(ngModel)]="statusFilter"
+            (ngModelChange)="onStatusFilterChange()">
+            <option value="all">All Statuses</option>
+            <option *ngFor="let status of statusOptions" [value]="status.value">
+              {{ status.label }}
+            </option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="text-center py-5">
+    <div class="spinner-border text-danger" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <p class="text-gray mt-2">Loading deliveries...</p>
+  </div>
+
+  <!-- Delivery Tracking Cards -->
+  <div *ngIf="!isLoading">
+    <div *ngIf="filteredOrders.length === 0" class="text-center py-5">
+      <i class="bi bi-truck text-gray display-4 mb-3"></i>
+      <p class="text-gray">No orders found</p>
+    </div>
+
+    <div class="row g-4">
+      <div class="col-lg-6" *ngFor="let order of filteredOrders">
+        <div class="card border-0 shadow-sm h-100 delivery-card">
+          <div class="card-body">
+            <!-- Order Header -->
+            <div class="d-flex justify-content-between align-items-start mb-3">
+              <div>
+                <h5 class="text-black fw-bold mb-1">Order #{{ order.id }}</h5>
+                <p class="text-gray small mb-0">
+                  {{ order.created_at | date:'medium' }}
+                </p>
+              </div>
+              <span [class]="'badge ' + getStatusClass(order.status)">
+                <i [class]="'bi ' + getStatusIcon(order.status) + ' me-1'"></i>
+                {{ getStatusLabel(order.status) }}
+              </span>
+            </div>
+
+            <!-- Delivery Progress -->
+            <div class="delivery-progress mb-3">
+              <div class="progress-steps">
+                <div *ngFor="let status of statusOptions; let i = index" 
+                     class="progress-step"
+                     [class.active]="getStatusIndex(order.status) >= i"
+                     [class.current]="status.value === order.status">
+                  <div class="step-icon">
+                    <i [class]="'bi ' + status.icon"></i>
+                  </div>
+                  <div class="step-label">{{ status.label }}</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Delivery Info -->
+            <div class="delivery-info mb-3" *ngIf="getDeliveryInfo(order.id) as delivery">
+              <div class="row g-2">
+                <div class="col-6">
+                  <small class="text-gray d-block">Last Updated</small>
+                  <span class="text-black">{{ delivery.updated_at | date:'short' }}</span>
+                </div>
+                <div class="col-6" *ngIf="delivery.estimated_delivery">
+                  <small class="text-gray d-block">Est. Delivery</small>
+                  <span class="text-black">{{ delivery.estimated_delivery | date }}</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Order Details -->
+            <div class="order-summary bg-light rounded p-3 mb-3">
+              <div class="row g-2">
+                <div class="col-6">
+                  <small class="text-gray d-block">Order Total</small>
+                  <span class="text-black fw-bold">${{ order.total_amount }}</span>
+                </div>
+                <div class="col-6">
+                  <small class="text-gray d-block">Payment</small>
+                  <span [class]="'badge ' + (order.payment_status === 'PAID' ? 'bg-success' : 'bg-warning')">
+                    {{ order.payment_status }}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="d-grid">
+              <button 
+                class="btn btn-danger"
+                (click)="openUpdateModal(order)"
+                [disabled]="!canUpdateStatus(order.status)">
+                <i class="bi bi-pencil me-2"></i>
+                {{ canUpdateStatus(order.status) ? 'Update Status' : 'Delivered' }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Update Status Modal -->
+<div class="modal fade" [class.show]="showUpdateModal" [style.display]="showUpdateModal ? 'block' : 'none'" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content" *ngIf="selectedOrder">
+      <div class="modal-header">
+        <h5 class="modal-title text-black fw-bold">
+          Update Delivery Status - Order #{{ selectedOrder.id }}
+        </h5>
+        <button type="button" class="btn-close" (click)="closeModal()"></button>
+      </div>
+      <div class="modal-body">
+        <!-- Current Status -->
+        <div class="alert alert-info mb-3">
+          <i class="bi bi-info-circle me-2"></i>
+          Current Status: <strong>{{ getStatusLabel(selectedOrder.status) }}</strong>
+        </div>
+
+        <form>
+          <!-- New Status -->
+          <div class="mb-3">
+            <label class="form-label text-gray small fw-bold">New Status *</label>
+            <select 
+              class="form-select" 
+              [(ngModel)]="updateForm.status"
+              name="status"
+              required>
+              <option [ngValue]="''">Select Status</option>
+              <option *ngFor="let status of statusOptions" [ngValue]="status.value">
+                {{ status.label }}
+              </option>
+            </select>
+          </div>
+
+          <!-- Notes -->
+          <div class="mb-3">
+            <label class="form-label text-gray small fw-bold">Notes (Optional)</label>
+            <textarea 
+              class="form-control" 
+              rows="3"
+              [(ngModel)]="updateForm.notes"
+              name="notes"
+              placeholder="Add any notes about this status update..."></textarea>
+          </div>
+
+          <!-- Status Guide -->
+          <div class="card border-0 bg-light">
+            <div class="card-body p-3">
+              <h6 class="text-black fw-bold mb-2">Status Guide:</h6>
+              <ul class="mb-0 small text-gray">
+                <li><strong>Placed:</strong> Order received and confirmed</li>
+                <li><strong>Packed:</strong> Order items packed and ready</li>
+                <li><strong>Dispatched:</strong> Order handed to courier</li>
+                <li><strong>In Transit:</strong> Order on its way to customer</li>
+                <li><strong>Delivered:</strong> Order received by customer</li>
+              </ul>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeModal()" [disabled]="isUpdating">
+          Cancel
+        </button>
+        <button type="button" class="btn btn-danger" (click)="updateDeliveryStatus()" [disabled]="isUpdating || !updateForm.status">
+          <span *ngIf="isUpdating" class="spinner-border spinner-border-sm me-2"></span>
+          Update Status
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal-backdrop fade" [class.show]="showUpdateModal" *ngIf="showUpdateModal"></div>

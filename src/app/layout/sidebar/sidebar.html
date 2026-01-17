@@ -1,0 +1,72 @@
+<aside class="bg-light min-vh-100 border-end border-gray p-3">
+  <!-- User Profile Summary -->
+  <div class="text-center mb-4" *ngIf="user">
+    <div class="rounded-circle bg-black text-white d-flex align-items-center justify-content-center mx-auto mb-2" 
+         style="width: 60px; height: 60px;">
+      <i class="bi bi-person fs-4"></i>
+    </div>
+    <h6 class="mb-1 text-black">{{ user.email }}</h6>
+    <span class="badge" [ngClass]="user.role === 'ADMIN' ? 'bg-red' : 'bg-gray'">
+      {{ user.role }}
+    </span>
+  </div>
+
+  <!-- Navigation Links -->
+  <nav class="nav flex-column">
+    <!-- Customer Links -->
+    <div *ngIf="user?.role === 'CUSTOMER'">
+      <h6 class="text-uppercase text-gray small fw-bold mb-2">My Account</h6>
+      <a class="nav-link" routerLink="/profile" routerLinkActive="active">
+        <i class="bi bi-person me-2"></i> Profile
+      </a>
+      <a class="nav-link" routerLink="/orders" routerLinkActive="active">
+        <i class="bi bi-receipt me-2"></i> My Orders
+      </a>
+      <a class="nav-link" routerLink="/addresses" routerLinkActive="active">
+        <i class="bi bi-geo-alt me-2"></i> Addresses
+      </a>
+      <a class="nav-link" routerLink="/wishlist" routerLinkActive="active">
+        <i class="bi bi-heart me-2"></i> Wishlist
+      </a>
+    </div>
+
+    <!-- Admin Links -->
+    <div *ngIf="user?.role === 'ADMIN'">
+      <h6 class="text-uppercase text-gray small fw-bold mb-2">Admin Dashboard</h6>
+      <a class="nav-link" routerLink="/admin/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{exact: false}">
+        <i class="bi bi-speedometer2 me-2"></i> Overview
+      </a>
+      <a class="nav-link" routerLink="/admin/products" routerLinkActive="active">
+        <i class="bi bi-box me-2"></i> Products
+      </a>
+      <a class="nav-link" routerLink="/admin/categories" routerLinkActive="active">
+        <i class="bi bi-tags me-2"></i> Categories
+      </a>
+      <a class="nav-link" routerLink="/admin/orders" routerLinkActive="active">
+        <i class="bi bi-receipt me-2"></i> Orders
+      </a>
+      <a class="nav-link" routerLink="/admin/delivery" routerLinkActive="active">
+        <i class="bi bi-truck me-2"></i> Delivery
+      </a>
+      <a class="nav-link" routerLink="/admin/promotions" routerLinkActive="active">
+        <i class="bi bi-tag me-2"></i> Promotions
+      </a>
+      <a class="nav-link" routerLink="/admin/analytics" routerLinkActive="active">
+        <i class="bi bi-graph-up me-2"></i> Analytics
+      </a>
+    </div>
+
+    <!-- Common Links -->
+    <hr class="my-3">
+    <h6 class="text-uppercase text-gray small fw-bold mb-2">Settings</h6>
+    <a class="nav-link" routerLink="/settings" routerLinkActive="active">
+      <i class="bi bi-gear me-2"></i> Account Settings
+    </a>
+    <a class="nav-link" routerLink="/security" routerLinkActive="active">
+      <i class="bi bi-shield-lock me-2"></i> Security
+    </a>
+    <a class="nav-link text-danger" (click)="onLogout()">
+      <i class="bi bi-box-arrow-right me-2"></i> Logout
+    </a>
+  </nav>
+</aside>

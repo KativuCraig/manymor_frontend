@@ -1,0 +1,284 @@
+<!-- Loading State -->
+<div *ngIf="isLoading" class="container py-5">
+  <div class="text-center">
+    <div class="spinner-border text-red" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <p class="text-gray mt-2">Loading product details...</p>
+  </div>
+</div>
+
+<!-- Error State -->
+<div *ngIf="!isLoading && errorMessage" class="container py-5">
+  <div class="alert alert-danger">
+    <h4 class="alert-heading">Error</h4>
+    <p>{{ errorMessage }}</p>
+    <a routerLink="/products" class="btn btn-outline-red">Back to Products</a>
+  </div>
+</div>
+
+<!-- Product Not Found State -->
+<div *ngIf="!isLoading && !errorMessage && !product" class="container py-5">
+  <div class="text-center">
+    <i class="bi bi-exclamation-triangle display-1 text-gray mb-3"></i>
+    <h4 class="text-black mb-2">Product Not Found</h4>
+    <p class="text-gray mb-4">The product you're looking for doesn't exist or has been removed.</p>
+    <a routerLink="/products" class="btn btn-red">
+      <i class="bi bi-arrow-left me-2"></i> Back to Products
+    </a>
+  </div>
+</div>
+
+<!-- Product Details (only show when we have product data) -->
+<div *ngIf="!isLoading && !errorMessage && product" class="container py-5">
+  <!-- Back Navigation -->
+  <div class="mb-4">
+    <a routerLink="/products" class="text-red text-decoration-none">
+      <i class="bi bi-arrow-left"></i> Back to Products
+    </a>
+  </div>
+
+  <div class="row g-5">
+    <!-- Product Images -->
+    <div class="col-lg-6">
+      <!-- Main Image Carousel -->
+      <div class="product-images mb-4">
+        <div id="productCarousel" class="carousel slide" data-bs-ride="carousel">
+          <!-- Indicators -->
+          <div class="carousel-indicators" *ngIf="product.images.length > 1">
+            <button *ngFor="let image of product.images; let i = index" 
+                    type="button" 
+                    data-bs-target="#productCarousel" 
+                    [attr.data-bs-slide-to]="i"
+                    [class.active]="i === 0"
+                    [attr.aria-current]="i === 0 ? 'true' : null"
+                    [attr.aria-label]="'Slide ' + (i + 1)">
+            </button>
+          </div>
+
+          <!-- Slides -->
+          <div class="carousel-inner rounded-3">
+            <div *ngFor="let image of product.images; let i = index" 
+                 class="carousel-item" 
+                 [class.active]="i === 0">
+              <img [src]="image.image" 
+                   [alt]="product.name + ' - Image ' + (i + 1)"
+                   class="d-block w-100 product-main-image">
+            </div>
+            
+            <!-- Fallback if no images -->
+            <div *ngIf="product.images.length === 0" class="carousel-item active">
+              <img [src]="getCategoryPlaceholderImage(product.category)"
+                   [alt]="product.name"
+                   class="d-block w-100 product-main-image">
+            </div>
+          </div>
+
+          <!-- Controls -->
+          <button *ngIf="product.images.length > 1" 
+                  class="carousel-control-prev" 
+                  type="button" 
+                  data-bs-target="#productCarousel" 
+                  data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+          </button>
+          <button *ngIf="product.images.length > 1" 
+                  class="carousel-control-next" 
+                  type="button" 
+                  data-bs-target="#productCarousel" 
+                  data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Thumbnail Gallery -->
+      <div *ngIf="product.images.length > 1" class="thumbnail-gallery">
+        <div class="row g-2">
+          <div class="col-3" *ngFor="let image of product.images; let i = index">
+            <a href="javascript:void(0)" 
+               (click)="showImage(i)"
+               class="thumbnail-link">
+              <img [src]="image.image" 
+                   [alt]="product.name + ' - Thumbnail ' + (i + 1)"
+                   class="img-fluid rounded"
+                   [class.active]="i === currentImageIndex">
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Product Info -->
+    <div class="col-lg-6">
+      <div class="product-info">
+        <!-- Category -->
+        <div class="mb-2">
+          <a href="#" class="text-red text-decoration-none">{{ product.category_name }}</a>
+          <span *ngIf="product.is_active" class="badge bg-success ms-2">Active</span>
+          <span *ngIf="!product.is_active" class="badge bg-danger ms-2">Inactive</span>
+          <span *ngIf="product.has_promotion && product.active_promotion" 
+                class="badge ms-2"
+                [style.background-color]="product.active_promotion.badge_color">
+            {{ product.active_promotion.badge_text }}
+          </span>
+        </div>
+
+        <!-- Product Name -->
+        <h1 class="text-black fw-bold mb-3">{{ product.name }}</h1>
+
+        <!-- Price -->
+        <div class="mb-4">
+          <div class="d-flex align-items-baseline gap-3">
+            <span *ngIf="product.has_promotion && product.promotional_price" 
+                  class="text-red fw-bold display-6">${{ product.promotional_price | number:'1.2-2' }}</span>
+            <span [class.text-gray]="product.has_promotion"
+                  [class.text-decoration-line-through]="product.has_promotion"
+                  [class.fs-4]="product.has_promotion"
+                  [class.text-red]="!product.has_promotion"
+                  [class.fw-bold]="!product.has_promotion"
+                  [class.display-6]="!product.has_promotion">
+              ${{ product.price | number:'1.2-2' }}
+            </span>
+          </div>
+          
+          <!-- Savings Display -->
+          <div *ngIf="product.has_promotion && product.discount_percentage" 
+               class="mt-2">
+            <span class="badge bg-success fs-6">
+              <i class="bi bi-tag-fill"></i> Save {{ product.discount_percentage | number:'1.0-0' }}%!
+            </span>
+          </div>
+          
+          <!-- Stock Status -->
+          <div class="d-flex align-items-center mt-2">
+            <span *ngIf="product.stock_quantity > 0" class="text-success">
+              <i class="bi bi-check-circle-fill"></i> In Stock
+            </span>
+            <span *ngIf="product.stock_quantity === 0" class="text-danger">
+              <i class="bi bi-x-circle-fill"></i> Out of Stock
+            </span>
+          </div>
+        </div>
+
+        <!-- Stock Info -->
+        <div class="alert" [ngClass]="getStockAlertClass()" role="alert">
+          <div class="d-flex align-items-center">
+            <i class="bi bi-box-seam me-2"></i>
+            <div>
+              <strong>Stock Status:</strong> 
+              {{ product.stock_quantity }} units available
+              <span *ngIf="product.stock_quantity < 10 && product.stock_quantity > 0" class="ms-2">
+                (Low stock - Order soon!)
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Description -->
+        <div class="mb-4">
+          <h5 class="text-black mb-2">Description</h5>
+          <p class="text-gray">{{ product.description }}</p>
+        </div>
+
+        <!-- Add to Cart Section -->
+        <div class="card border-0 shadow-sm mb-4">
+          <div class="card-body">
+            <h5 class="card-title text-black mb-3">Order Now</h5>
+            
+            <!-- Quantity Selector -->
+            <div class="mb-4">
+              <label for="quantity" class="form-label text-black">Quantity</label>
+              <div class="d-flex align-items-center">
+                <button class="btn btn-outline-red" 
+                        (click)="decreaseQuantity()"
+                        [disabled]="quantity <= 1">
+                  <i class="bi bi-dash"></i>
+                </button>
+                <input type="number" 
+                       id="quantity"
+                       class="form-control mx-2 text-center"
+                       [(ngModel)]="quantity"
+                       min="1"
+                       [max]="product.stock_quantity"
+                       style="width: 80px;">
+                <button class="btn btn-outline-red" 
+                        (click)="increaseQuantity()"
+                        [disabled]="quantity >= product.stock_quantity">
+                  <i class="bi bi-plus"></i>
+                </button>
+                <span class="ms-3 text-gray">
+                  Max: {{ product.stock_quantity }} units
+                </span>
+              </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="d-flex gap-3">
+              <button class="btn btn-red flex-grow-1 py-3" 
+                      (click)="addToCart()"
+                      [disabled]="product.stock_quantity === 0">
+                <i class="bi bi-cart-plus me-2"></i> Add to Cart
+              </button>
+              <button class="btn btn-outline-red py-3" 
+                      (click)="buyNow()"
+                      [disabled]="product.stock_quantity === 0">
+                <i class="bi bi-bag-check me-2"></i> Buy Now
+              </button>
+            </div>
+
+            <!-- Stock Warning -->
+            <div *ngIf="product.stock_quantity === 0" class="alert alert-warning mt-3 mb-0">
+              <i class="bi bi-exclamation-triangle me-2"></i>
+              This product is currently out of stock. Check back later!
+            </div>
+
+            <!-- Quantity Warning -->
+            <div *ngIf="quantity > product.stock_quantity" class="alert alert-danger mt-3 mb-0">
+              <i class="bi bi-exclamation-triangle me-2"></i>
+              Cannot order more than available stock!
+            </div>
+          </div>
+        </div>
+
+        <!-- Product Details -->
+        <div class="row g-3 mb-4">
+          <div class="col-md-6">
+            <div class="card border-0 bg-light-gray">
+              <div class="card-body">
+                <h6 class="card-subtitle text-gray mb-1">Category</h6>
+                <p class="card-text text-black fw-medium">{{ product.category_name }}</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="card border-0 bg-light-gray">
+              <div class="card-body">
+                <h6 class="card-subtitle text-gray mb-1">SKU</h6>
+                <p class="card-text text-black fw-medium">#{{ product.id }}</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="card border-0 bg-light-gray">
+              <div class="card-body">
+                <h6 class="card-subtitle text-gray mb-1">Added On</h6>
+                <p class="card-text text-black fw-medium">{{ product.created_at | date:'longDate' }}</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="card border-0 bg-light-gray">
+              <div class="card-body">
+                <h6 class="card-subtitle text-gray mb-1">Status</h6>
+                <p class="card-text text-black fw-medium">{{ product.is_active ? 'Active' : 'Inactive' }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

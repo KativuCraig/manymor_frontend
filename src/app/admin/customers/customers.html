@@ -1,0 +1,230 @@
+<div class="customers-container">
+  <!-- Header -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h2 class="mb-1">Customers Management</h2>
+      <p class="text-muted mb-0">Manage user accounts and roles</p>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <div class="card shadow-sm mb-4">
+    <div class="card-body">
+      <div class="row g-3">
+        <div class="col-md-4">
+          <input 
+            type="text" 
+            class="form-control" 
+            placeholder="Search by name, email, or phone..."
+            [(ngModel)]="searchTerm"
+            (input)="onSearchChange()">
+        </div>
+        <div class="col-md-3">
+          <select 
+            class="form-select" 
+            [(ngModel)]="filterRole"
+            (change)="onFilterChange()">
+            <option value="ALL">All Roles</option>
+            <option value="CUSTOMER">Customer</option>
+            <option value="ADMIN">Admin</option>
+          </select>
+        </div>
+        <div class="col-md-3">
+          <select 
+            class="form-select" 
+            [(ngModel)]="filterStatus"
+            (change)="onFilterChange()">
+            <option value="ALL">All Status</option>
+            <option value="ACTIVE">Active</option>
+            <option value="INACTIVE">Inactive</option>
+          </select>
+        </div>
+        <div class="col-md-2">
+          <button 
+            class="btn btn-outline-danger w-100" 
+            (click)="clearFilters()">
+            Clear Filters
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="text-center py-5">
+    <div class="spinner-border text-danger" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <p class="text-muted mt-3">Loading customers...</p>
+  </div>
+
+  <!-- Customers Table -->
+  <div *ngIf="!isLoading" class="card shadow-sm">
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Phone</th>
+              <th>Role</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let customer of filteredCustomers">
+              <td>{{ customer.id }}</td>
+              <td>{{ getCustomerName(customer) }}</td>
+              <td>{{ customer.email }}</td>
+              <td>{{ customer.phone_number || 'N/A' }}</td>
+              <td>
+                <span class="badge" [ngClass]="getRoleBadgeClass(customer.role)">
+                  {{ customer.role }}
+                </span>
+              </td>
+              <td>
+                <button 
+                  class="btn btn-sm btn-outline-danger me-2" 
+                  (click)="openDetailsModal(customer)"
+                  title="View Details">
+                  <i class="bi bi-eye"></i>
+                </button>
+                <button 
+                  class="btn btn-sm btn-danger" 
+                  (click)="openEditModal(customer)"
+                  title="Change Role">
+                  <i class="bi bi-person-gear"></i>
+                </button>
+              </td>
+            </tr>
+            <tr *ngIf="filteredCustomers.length === 0">
+              <td colspan="6" class="text-center text-muted py-4">
+                No customers found
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      
+      <div class="mt-3 text-muted">
+        Showing {{ filteredCustomers.length }} of {{ customers.length }} customers
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Edit Role Modal -->
+<div class="modal" [class.show]="showEditModal" [style.display]="showEditModal ? 'block' : 'none'" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Change User Role</h5>
+        <button type="button" class="btn-close" (click)="closeEditModal()"></button>
+      </div>
+      <div class="modal-body">
+        <div *ngIf="selectedCustomer">
+          <p><strong>User:</strong> {{ selectedCustomer.email }}</p>
+          <p><strong>Current Role:</strong> 
+            <span class="badge" [ngClass]="getRoleBadgeClass(selectedCustomer.role)">
+              {{ selectedCustomer.role }}
+            </span>
+          </p>
+          
+          <div class="mb-3">
+            <label class="form-label">New Role</label>
+            <select class="form-select" [(ngModel)]="editForm.role">
+              <option value="CUSTOMER">Customer</option>
+              <option value="ADMIN">Admin</option>
+            </select>
+          </div>
+          
+          <div class="alert alert-warning" role="alert">
+            <i class="bi bi-exclamation-triangle"></i>
+            <strong>Warning:</strong> Changing a user's role will affect their access permissions.
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" (click)="closeEditModal()">
+          Cancel
+        </button>
+        <button 
+          type="button" 
+          class="btn btn-danger" 
+          (click)="saveCustomerRole()"
+          [disabled]="!editForm.role || isLoading">
+          {{ isLoading ? 'Updating...' : 'Update Role' }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Details Modal -->
+<div class="modal" [class.show]="showDetailsModal" [style.display]="showDetailsModal ? 'block' : 'none'" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Customer Details</h5>
+        <button type="button" class="btn-close" (click)="closeDetailsModal()"></button>
+      </div>
+      <div class="modal-body">
+        <div *ngIf="detailsCustomer">
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="text-muted small">Customer ID</label>
+              <p class="mb-0">{{ detailsCustomer.id }}</p>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="text-muted small">Email</label>
+              <p class="mb-0">{{ detailsCustomer.email }}</p>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="text-muted small">First Name</label>
+              <p class="mb-0">{{ detailsCustomer.first_name || 'N/A' }}</p>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="text-muted small">Last Name</label>
+              <p class="mb-0">{{ detailsCustomer.last_name || 'N/A' }}</p>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="text-muted small">Phone Number</label>
+              <p class="mb-0">{{ detailsCustomer.phone_number || 'N/A' }}</p>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="text-muted small">Role</label>
+              <p class="mb-0">
+                <span class="badge" [ngClass]="getRoleBadgeClass(detailsCustomer.role)">
+                  {{ detailsCustomer.role }}
+                </span>
+              </p>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="text-muted small">Account Status</label>
+              <p class="mb-0">
+                <span class="badge" [ngClass]="getStatusBadgeClass(detailsCustomer.is_active)">
+                  {{ detailsCustomer.is_active ? 'Active' : 'Inactive' }}
+                </span>
+              </p>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="text-muted small">Member Since</label>
+              <p class="mb-0">{{ formatDate(detailsCustomer.date_joined) }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" (click)="closeDetailsModal()">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Backdrop -->
+<div class="modal-backdrop fade" [class.show]="showEditModal || showDetailsModal" 
+     *ngIf="showEditModal || showDetailsModal"></div>

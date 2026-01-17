@@ -1,0 +1,91 @@
+/* Dashboard Styles */
+.icon-wrapper {
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chart-container {
+  height: 300px;
+  position: relative;
+}
+
+/* Quick Action Cards */
+.quick-action-card {
+  transition: all 0.3s ease;
+  height: 100%;
+}
+
+.quick-action-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15) !important;
+  border-color: var(--primary-red) !important;
+}
+
+.quick-action-card:hover .action-icon i {
+  transform: scale(1.1);
+}
+
+.action-icon i {
+  transition: transform 0.3s ease;
+}
+
+/* Badges */
+.badge.bg-red {
+  background-color: var(--primary-red) !important;
+}
+
+/* Table Styles */
+.table-hover tbody tr:hover {
+  background-color: rgba(255, 0, 0, 0.05);
+}
+
+/* List Group Items */
+.list-group-item-action:hover {
+  background-color: rgba(255, 0, 0, 0.05);
+  border-left: 3px solid var(--primary-red);
+}
+
+/* Status Colors */
+.bg-info {
+  background-color: var(--info) !important;
+}
+
+.bg-primary {
+  background-color: var(--primary) !important;
+}
+
+.bg-warning {
+  background-color: var(--warning) !important;
+}
+
+.bg-success {
+  background-color: var(--success) !important;
+}
+
+.bg-danger {
+  background-color: var(--danger) !important;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .icon-wrapper {
+    width: 50px;
+    height: 50px;
+    padding: 0.75rem !important;
+  }
+  
+  .icon-wrapper i {
+    font-size: 1.5rem !important;
+  }
+  
+  .chart-container {
+    height: 250px;
+  }
+  
+  .quick-action-card .card-body {
+    padding: 1.5rem !important;
+  }
+}

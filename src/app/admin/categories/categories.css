@@ -1,0 +1,68 @@
+/* Categories Management Styles */
+
+.icon-wrapper {
+  width: 80px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Table Styles */
+.table-hover tbody tr:hover {
+  background-color: rgba(255, 0, 0, 0.05);
+}
+
+/* Modal Styles */
+.modal.show {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-backdrop.show {
+  opacity: 0.5;
+}
+
+/* Badge Styles */
+.badge {
+  padding: 0.5rem 1rem;
+  font-weight: 500;
+}
+
+.bg-primary {
+  background-color: #0d6efd !important;
+}
+
+.bg-info {
+  background-color: #17a2b8 !important;
+}
+
+/* Form Styles */
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--primary-red);
+  box-shadow: 0 0 0 0.25rem rgba(255, 0, 0, 0.1);
+}
+
+/* Button Styles */
+.btn-danger {
+  background-color: var(--primary-red);
+  border-color: var(--primary-red);
+}
+
+.btn-danger:hover {
+  background-color: #cc0000;
+  border-color: #cc0000;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .icon-wrapper {
+    width: 60px;
+    height: 60px;
+  }
+  
+  .table th,
+  .table td {
+    font-size: 0.875rem;
+  }
+}

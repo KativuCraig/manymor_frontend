@@ -1,0 +1,173 @@
+﻿/* Admin Layout Styles */
+
+.admin-layout-wrapper {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.admin-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  z-index: 1030;
+  border-bottom: 3px solid var(--primary-red);
+  background-color: var(--primary-black);
+}
+
+.admin-sidebar {
+  position: fixed;
+  top: 60px;
+  left: 0;
+  width: 250px;
+  height: calc(100vh - 60px);
+  transition: all 0.3s ease;
+  z-index: 1020;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background-color: var(--primary-dark);
+}
+
+.admin-sidebar.collapsed {
+  width: 70px;
+}
+
+.admin-sidebar.collapsed .nav-text,
+.admin-sidebar.collapsed .sidebar-stats h6,
+.admin-sidebar.collapsed .sidebar-stats .text-gray,
+.admin-sidebar.collapsed .badge {
+  display: none !important;
+}
+
+.admin-sidebar.collapsed .sidebar-stats {
+  padding: 1rem 0.5rem !important;
+}
+
+.admin-sidebar.collapsed .sidebar-stats .bg-black {
+  padding: 0.5rem !important;
+}
+
+.admin-main {
+  margin-top: 60px;
+  margin-left: 250px;
+  min-height: calc(100vh - 110px);
+  transition: margin-left 0.3s ease;
+  overflow-y: auto;
+  padding-bottom: 50px;
+}
+
+.admin-sidebar.collapsed ~ .admin-main {
+  margin-left: 70px;
+}
+
+.admin-footer {
+  position: fixed;
+  bottom: 0;
+  left: 250px;
+  right: 0;
+  height: 50px;
+  transition: left 0.3s ease;
+  z-index: 1010;
+  background-color: var(--primary-black);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Footer adjusts when sidebar is collapsed */
+:host-context(body) .admin-sidebar.collapsed ~ * .admin-footer,
+.sidebar-collapsed .admin-footer {
+  left: 70px;
+}
+
+.sidebar-nav .nav-link {
+  color: var(--primary-gray);
+  padding: 0.75rem 1rem;
+  border-radius: 0.25rem;
+  margin-bottom: 0.25rem;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+}
+
+.sidebar-nav .nav-link:hover {
+  color: var(--primary-white);
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.sidebar-nav .nav-link.active {
+  color: var(--primary-red);
+  background-color: rgba(255, 0, 0, 0.1);
+}
+
+.sidebar-nav .nav-link i {
+  width: 20px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.sidebar-stats .bg-black {
+  background-color: rgba(0, 0, 0, 0.3) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.breadcrumb {
+  background-color: transparent;
+  padding: 0;
+  margin-bottom: 1rem;
+}
+
+.breadcrumb-item a {
+  color: var(--primary-red);
+  text-decoration: none;
+}
+
+.breadcrumb-item.active {
+  color: var(--primary-gray);
+}
+
+.dropdown-menu {
+  min-width: 300px;
+  border: 1px solid var(--primary-gray);
+}
+
+.admin-sidebar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.admin-sidebar::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.admin-sidebar::-webkit-scrollbar-thumb {
+  background: rgba(255, 0, 0, 0.5);
+  border-radius: 3px;
+}
+
+.admin-sidebar::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-red);
+}
+
+@media (max-width: 768px) {
+  .admin-sidebar {
+    left: -250px;
+  }
+  
+  .admin-sidebar:not(.collapsed) {
+    left: 0;
+  }
+  
+  .admin-sidebar.collapsed {
+    width: 250px;
+    left: -250px;
+  }
+  
+  .admin-main {
+    margin-left: 0 !important;
+  }
+  
+  .admin-footer {
+    left: 0 !important;
+  }
+}

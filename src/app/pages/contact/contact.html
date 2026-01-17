@@ -1,0 +1,229 @@
+<!-- Contact Us Page -->
+<div class="contact-page">
+  <!-- Hero Section -->
+  <section class="hero-section bg-black text-white py-5">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 mx-auto text-center">
+          <h1 class="display-4 fw-bold mb-3">
+            Get In <span class="text-red">Touch</span>
+          </h1>
+          <p class="lead text-gray">
+            Have questions? We'd love to hear from you. Send us a message and we'll respond as soon as possible.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Information & Form Section -->
+  <section class="contact-section py-5">
+    <div class="container">
+      <div class="row g-4">
+        <!-- Contact Information -->
+        <div class="col-lg-4">
+          <div class="contact-info">
+            <h3 class="fw-bold mb-4">Contact Information</h3>
+            
+            <!-- Address -->
+            <div class="info-item mb-4">
+              <div class="d-flex align-items-start">
+                <div class="icon-wrapper bg-red text-white rounded-circle d-flex align-items-center justify-content-center me-3">
+                  <i class="bi bi-geo-alt"></i>
+                </div>
+                <div>
+                  <h6 class="fw-bold mb-1">Address</h6>
+                  <p class="text-muted mb-0">{{ contactInfo.address }}</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Phone -->
+            <div class="info-item mb-4">
+              <div class="d-flex align-items-start">
+                <div class="icon-wrapper bg-red text-white rounded-circle d-flex align-items-center justify-content-center me-3">
+                  <i class="bi bi-telephone"></i>
+                </div>
+                <div>
+                  <h6 class="fw-bold mb-1">Phone</h6>
+                  <p class="text-muted mb-0">{{ contactInfo.phone }}</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Email -->
+            <div class="info-item mb-4">
+              <div class="d-flex align-items-start">
+                <div class="icon-wrapper bg-red text-white rounded-circle d-flex align-items-center justify-content-center me-3">
+                  <i class="bi bi-envelope"></i>
+                </div>
+                <div>
+                  <h6 class="fw-bold mb-1">Email</h6>
+                  <p class="text-muted mb-0">{{ contactInfo.email }}</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Business Hours -->
+            <div class="info-item mb-4">
+              <div class="d-flex align-items-start">
+                <div class="icon-wrapper bg-red text-white rounded-circle d-flex align-items-center justify-content-center me-3">
+                  <i class="bi bi-clock"></i>
+                </div>
+                <div>
+                  <h6 class="fw-bold mb-1">Business Hours</h6>
+                  <p class="text-muted mb-0">{{ contactInfo.hours }}</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Social Media -->
+            <div class="social-links mt-4">
+              <h6 class="fw-bold mb-3">Follow Us</h6>
+              <div class="d-flex gap-2">
+                <a *ngFor="let social of socialLinks" 
+                   [href]="social.url" 
+                   [title]="social.name"
+                   class="btn btn-outline-dark btn-sm rounded-circle d-flex align-items-center justify-content-center"
+                   style="width: 40px; height: 40px;">
+                  <i class="bi {{ social.icon }}"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Contact Form -->
+        <div class="col-lg-8">
+          <div class="card border-0 shadow-sm">
+            <div class="card-body p-4">
+              <h3 class="fw-bold mb-4">Send Us a Message</h3>
+              
+              <form [formGroup]="contactForm" (ngSubmit)="onSubmit()">
+                <div class="row g-3">
+                  <!-- Name -->
+                  <div class="col-md-6">
+                    <label for="name" class="form-label">Full Name <span class="text-danger">*</span></label>
+                    <input type="text" 
+                           class="form-control" 
+                           id="name" 
+                           formControlName="name"
+                           [class.is-invalid]="isFieldInvalid('name')"
+                           placeholder="John Doe">
+                    <div class="invalid-feedback" *ngIf="isFieldInvalid('name')">
+                      {{ getErrorMessage('name') }}
+                    </div>
+                  </div>
+
+                  <!-- Email -->
+                  <div class="col-md-6">
+                    <label for="email" class="form-label">Email Address <span class="text-danger">*</span></label>
+                    <input type="email" 
+                           class="form-control" 
+                           id="email" 
+                           formControlName="email"
+                           [class.is-invalid]="isFieldInvalid('email')"
+                           placeholder="john@example.com">
+                    <div class="invalid-feedback" *ngIf="isFieldInvalid('email')">
+                      {{ getErrorMessage('email') }}
+                    </div>
+                  </div>
+
+                  <!-- Subject -->
+                  <div class="col-12">
+                    <label for="subject" class="form-label">Subject <span class="text-danger">*</span></label>
+                    <input type="text" 
+                           class="form-control" 
+                           id="subject" 
+                           formControlName="subject"
+                           [class.is-invalid]="isFieldInvalid('subject')"
+                           placeholder="How can we help you?">
+                    <div class="invalid-feedback" *ngIf="isFieldInvalid('subject')">
+                      {{ getErrorMessage('subject') }}
+                    </div>
+                  </div>
+
+                  <!-- Message -->
+                  <div class="col-12">
+                    <label for="message" class="form-label">Message <span class="text-danger">*</span></label>
+                    <textarea class="form-control" 
+                              id="message" 
+                              rows="6" 
+                              formControlName="message"
+                              [class.is-invalid]="isFieldInvalid('message')"
+                              placeholder="Tell us more about your inquiry..."></textarea>
+                    <div class="invalid-feedback" *ngIf="isFieldInvalid('message')">
+                      {{ getErrorMessage('message') }}
+                    </div>
+                  </div>
+
+                  <!-- Submit Button -->
+                  <div class="col-12">
+                    <button type="submit" 
+                            class="btn btn-red btn-lg w-100" 
+                            [disabled]="isSubmitting">
+                      <span *ngIf="!isSubmitting">
+                        <i class="bi bi-send me-2"></i> Send Message
+                      </span>
+                      <span *ngIf="isSubmitting">
+                        <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                        Sending...
+                      </span>
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ Section -->
+  <section class="faq-section py-5 bg-light">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 mx-auto">
+          <h2 class="text-center fw-bold mb-4">Frequently Asked Questions</h2>
+          <p class="text-center text-muted mb-5">Quick answers to common questions</p>
+
+          <div class="accordion" id="faqAccordion">
+            <div class="accordion-item border-0 shadow-sm mb-3" *ngFor="let faq of faqs; let i = index">
+              <h2 class="accordion-header">
+                <button class="accordion-button fw-bold" 
+                        [class.collapsed]="i !== 0"
+                        type="button" 
+                        [attr.data-bs-toggle]="'collapse'" 
+                        [attr.data-bs-target]="'#faq' + i"
+                        [attr.aria-expanded]="i === 0"
+                        [attr.aria-controls]="'faq' + i">
+                  {{ faq.question }}
+                </button>
+              </h2>
+              <div [id]="'faq' + i" 
+                   class="accordion-collapse collapse"
+                   [class.show]="i === 0"
+                   data-bs-parent="#faqAccordion">
+                <div class="accordion-body text-muted">
+                  {{ faq.answer }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Map Section (Placeholder) -->
+  <section class="map-section">
+    <div class="map-placeholder bg-secondary text-white d-flex align-items-center justify-content-center" 
+         style="height: 400px;">
+      <div class="text-center">
+        <i class="bi bi-map" style="font-size: 4rem;"></i>
+        <p class="mt-3 mb-0">Map will be displayed here</p>
+      </div>
+    </div>
+  </section>
+</div>

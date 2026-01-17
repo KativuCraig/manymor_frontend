@@ -1,0 +1,182 @@
+<!-- Admin Layout -->
+<div class="admin-layout-wrapper" [class.sidebar-collapsed]="sidebarCollapsed">
+<!-- Admin Header -->
+<header class="admin-header bg-black text-white shadow-sm">
+  <div class="container-fluid">
+    <div class="d-flex align-items-center justify-content-between py-2">
+      <!-- Left: Logo & Toggle -->
+      <div class="d-flex align-items-center">
+        <button class="btn btn-dark border-0 me-3" (click)="toggleSidebar()">
+          <i class="bi bi-list"></i>
+          </button>
+          <a routerLink="/admin/dashboard" class="navbar-brand fw-bold">
+            <span class="text-red">MANYMOR</span> <span class="text-white">Admin</span>
+          </a>
+        </div>
+        
+        <!-- Right: Admin User & Actions -->
+        <div class="d-flex align-items-center">
+          <!-- Notifications -->
+          <div class="dropdown me-3">
+            <button class="btn btn-dark border-0 position-relative" type="button" data-bs-toggle="dropdown">
+              <i class="bi bi-bell"></i>
+              <span *ngIf="notificationCount > 0" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-red">
+                {{ notificationCount }}
+              </span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end shadow">
+              <li><h6 class="dropdown-header">Notifications</h6></li>
+              <li *ngFor="let notification of notifications">
+                <a class="dropdown-item" href="#">
+                  <div class="d-flex">
+                    <div class="flex-shrink-0">
+                      <i class="bi" [ngClass]="getNotificationIcon(notification.type)"></i>
+                    </div>
+                    <div class="flex-grow-1 ms-2">
+                      <p class="mb-0 small">{{ notification.message }}</p>
+                      <small class="text-muted">{{ notification.time }}</small>
+                    </div>
+                  </div>
+                </a>
+              </li>
+              <li *ngIf="notifications.length === 0">
+                <a class="dropdown-item text-center text-muted">No notifications</a>
+              </li>
+            </ul>
+          </div>
+          
+          <!-- Admin User -->
+          <div class="dropdown">
+            <button class="btn btn-dark border-0 d-flex align-items-center" type="button" data-bs-toggle="dropdown">
+              <div class="rounded-circle bg-light text-black d-flex align-items-center justify-content-center me-2" 
+                   style="width: 32px; height: 32px;">
+                <i class="bi bi-person"></i>
+              </div>
+              <span class="d-none d-md-inline">{{ userEmail }}</span>
+              <i class="bi bi-chevron-down ms-1"></i>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end shadow">
+              <li><h6 class="dropdown-header">Logged in as Admin</h6></li>
+              <li><a class="dropdown-item" routerLink="/admin/profile"><i class="bi bi-person me-2"></i> Profile</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" routerLink="/"><i class="bi bi-house me-2"></i> View Store</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item text-danger" (click)="logout()"><i class="bi bi-box-arrow-right me-2"></i> Logout</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="d-flex flex-grow-1">
+    <!-- Admin Sidebar -->
+    <aside class="admin-sidebar bg-dark text-white" [class.collapsed]="sidebarCollapsed">
+      <div class="sidebar-content">
+        <!-- Navigation -->
+        <nav class="sidebar-nav p-3">
+          <ul class="nav flex-column">
+            <li class="nav-item">
+              <a class="nav-link" routerLink="/admin/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{exact: false}">
+                <i class="bi bi-speedometer2 me-2"></i>
+                <span class="nav-text">Dashboard</span>
+              </a>
+            </li>
+            
+            <!-- Products -->
+            <li class="nav-item">
+              <a class="nav-link" routerLink="/admin/products" routerLinkActive="active">
+                <i class="bi bi-box me-2"></i>
+                <span class="nav-text">Products</span>
+                <span class="badge bg-red ms-auto">{{ stats.totalProducts || 0 }}</span>
+              </a>
+            </li>
+            
+            <!-- Orders -->
+            <li class="nav-item">
+              <a class="nav-link" routerLink="/admin/orders" routerLinkActive="active">
+                <i class="bi bi-receipt me-2"></i>
+                <span class="nav-text">Orders</span>
+                <span class="badge bg-red ms-auto">{{ stats.pendingOrders || 0 }}</span>
+              </a>
+            </li>
+            
+            <!-- Categories -->
+            <li class="nav-item">
+              <a class="nav-link" routerLink="/admin/categories" routerLinkActive="active">
+                <i class="bi bi-tags me-2"></i>
+                <span class="nav-text">Categories</span>
+              </a>
+            </li>
+            
+            <!-- Delivery -->
+            <li class="nav-item">
+              <a class="nav-link" routerLink="/admin/delivery" routerLinkActive="active">
+                <i class="bi bi-truck me-2"></i>
+                <span class="nav-text">Delivery</span>
+                <span class="badge bg-warning ms-auto">{{ stats.pendingDeliveries || 0 }}</span>
+              </a>
+            </li>
+            
+            <!-- Promotions -->
+            <li class="nav-item">
+              <a class="nav-link" routerLink="/admin/promotions" routerLinkActive="active">
+                <i class="bi bi-tag me-2"></i>
+                <span class="nav-text">Promotions</span>
+              </a>
+            </li>
+            
+            <!-- Customers -->
+            <li class="nav-item">
+              <a class="nav-link" routerLink="/admin/customers" routerLinkActive="active">
+                <i class="bi bi-people me-2"></i>
+                <span class="nav-text">Customers</span>
+                <span class="badge bg-red ms-auto">{{ stats.totalCustomers || 0 }}</span>
+              </a>
+            </li>
+            
+            
+            
+            <li class="nav-item mt-4">
+              <a class="nav-link" routerLink="/">
+                <i class="bi bi-shop me-2"></i>
+                <span class="nav-text">View Store</span>
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="admin-main flex-grow-1 bg-light-gray">
+      <div class="container-fluid py-3">
+        <!-- Breadcrumb -->
+        <nav aria-label="breadcrumb" class="mb-3">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a routerLink="/admin/dashboard">Admin</a></li>
+            <li class="breadcrumb-item active" *ngIf="breadcrumb">{{ breadcrumb }}</li>
+          </ol>
+        </nav>
+
+        <!-- Router Outlet -->
+        <router-outlet></router-outlet>
+      </div>
+    </main>
+  </div>
+
+  <!-- Admin Footer -->
+  <footer class="admin-footer bg-black text-white py-3 border-top border-dark">
+    <div class="container-fluid">
+      <div class="row align-items-center">
+        <div class="col-md-6">
+          <small class="text-gray">© {{ currentYear }} MANYMOR Admin Dashboard</small>
+        </div>
+        <div class="col-md-6 text-md-end">
+          <small class="text-gray">v1.0.0 • Last updated: {{ lastUpdated }}</small>
+        </div>
+      </div>
+    </div>
+  </footer>
+</div>
+<!-- End Admin Layout Wrapper -->

@@ -1,0 +1,187 @@
+/* Checkout Steps */
+.checkout-steps {
+  gap: 2rem;
+}
+
+.checkout-step {
+  display: flex;
+  align-items: center;
+  color: var(--primary-gray);
+  position: relative;
+  flex: 1;
+}
+
+.checkout-step:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  left: 100%;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 2rem;
+  height: 1px;
+  background-color: var(--primary-gray);
+  opacity: 0.3;
+}
+
+.checkout-step.active {
+  color: var(--primary-red);
+}
+
+.checkout-step.active .step-number {
+  background-color: var(--primary-red);
+  color: var(--primary-white);
+}
+
+.checkout-step.completed .step-number {
+  background-color: var(--success);
+  color: var(--primary-white);
+}
+
+.checkout-step.completed {
+  color: var(--success);
+}
+
+.step-number {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: var(--light-gray);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 0.5rem;
+  font-weight: bold;
+  font-size: 0.875rem;
+  transition: all 0.3s ease;
+}
+
+.step-label {
+  font-weight: 500;
+}
+
+/* Payment Options */
+.payment-option .btn {
+  height: 80px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid transparent;
+  transition: all 0.3s ease;
+}
+
+.payment-option .btn-check:checked + .btn {
+  border-color: var(--primary-red);
+  background-color: rgba(255, 0, 0, 0.1);
+  color: var(--primary-red);
+}
+
+.payment-option .btn i {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+/* Order Review */
+.order-item:last-child {
+  border-bottom: none !important;
+  margin-bottom: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+.order-preview img {
+  border: 1px solid var(--primary-gray);
+}
+
+/* Form Styles */
+.form-control:focus {
+  border-color: var(--primary-red);
+  box-shadow: 0 0 0 0.25rem rgba(255, 0, 0, 0.25);
+}
+
+.form-check-input:checked {
+  background-color: var(--primary-red);
+  border-color: var(--primary-red);
+}
+
+.form-check-input:focus {
+  border-color: var(--primary-red);
+  box-shadow: 0 0 0 0.25rem rgba(255, 0, 0, 0.25);
+}
+
+/* Alert Styles */
+.alert {
+  border-radius: 0.5rem;
+  border: none;
+}
+
+.alert-info {
+  background-color: rgba(23, 162, 184, 0.1);
+  color: #0c5460;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .checkout-steps {
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  
+  .checkout-step {
+    flex: none;
+    width: calc(50% - 0.5rem);
+    margin-bottom: 1rem;
+  }
+  
+  .checkout-step:not(:last-child)::after {
+    display: none;
+  }
+  
+  .step-label {
+    font-size: 0.875rem;
+  }
+  
+  .payment-option .btn {
+    height: 60px;
+    padding: 0.5rem;
+  }
+  
+  .payment-option .btn i {
+    font-size: 1.25rem;
+    margin-bottom: 0.25rem;
+  }
+  
+  .sticky-top {
+    position: relative !important;
+    top: 0 !important;
+    margin-bottom: 1rem;
+  }
+}
+
+/* Loading States */
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Card input formatting */
+input[placeholder="MM/YY"] {
+  letter-spacing: 1px;
+}
+
+/* Security icons */
+.bi-shield-check, .bi-lock {
+  font-size: 1.25rem;
+}
+
+/* Mobile steps indicator */
+@media (max-width: 576px) {
+  .step-number {
+    width: 25px;
+    height: 25px;
+    font-size: 0.75rem;
+  }
+  
+  .checkout-step {
+    width: 100%;
+  }
+}

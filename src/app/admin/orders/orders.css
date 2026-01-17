@@ -1,0 +1,76 @@
+/* Orders Management Styles */
+
+.order-item-thumbnail {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 1px solid #e0e0e0;
+}
+
+/* Table Styles */
+.table-hover tbody tr:hover {
+  background-color: rgba(255, 0, 0, 0.05);
+  cursor: pointer;
+}
+
+/* Modal Styles */
+.modal.show {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-backdrop.show {
+  opacity: 0.5;
+}
+
+/* Badge Styles */
+.badge {
+  padding: 0.5rem 1rem;
+  font-weight: 500;
+}
+
+.bg-info {
+  background-color: #17a2b8 !important;
+}
+
+.bg-primary {
+  background-color: #0d6efd !important;
+}
+
+.bg-warning {
+  background-color: #ffc107 !important;
+  color: #000 !important;
+}
+
+.bg-success {
+  background-color: #28a745 !important;
+}
+
+.bg-danger {
+  background-color: #dc3545 !important;
+}
+
+/* Form Styles */
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--primary-red);
+  box-shadow: 0 0 0 0.25rem rgba(255, 0, 0, 0.1);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .order-item-thumbnail {
+    width: 35px;
+    height: 35px;
+  }
+  
+  .table th,
+  .table td {
+    font-size: 0.875rem;
+  }
+  
+  .badge {
+    padding: 0.35rem 0.65rem;
+    font-size: 0.75rem;
+  }
+}

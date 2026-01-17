@@ -1,0 +1,80 @@
+/* Products Management Styles */
+
+.product-thumbnail {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+}
+
+/* Image Preview Items */
+.image-preview-item {
+  position: relative;
+  display: inline-block;
+}
+
+.image-preview-item .btn-danger {
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.image-preview-item:hover .btn-danger {
+  opacity: 1;
+}
+
+/* Table Styles */
+.table-hover tbody tr:hover {
+  background-color: rgba(255, 0, 0, 0.05);
+  cursor: pointer;
+}
+
+/* Modal Styles */
+.modal.show {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-backdrop.show {
+  opacity: 0.5;
+}
+
+/* Button Styles */
+.btn-danger {
+  background-color: var(--primary-red);
+  border-color: var(--primary-red);
+}
+
+.btn-danger:hover {
+  background-color: #cc0000;
+  border-color: #cc0000;
+}
+
+/* Badge Styles */
+.badge {
+  padding: 0.5rem 1rem;
+  font-weight: 500;
+}
+
+.bg-info {
+  background-color: var(--info) !important;
+}
+
+/* Form Styles */
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--primary-red);
+  box-shadow: 0 0 0 0.25rem rgba(255, 0, 0, 0.1);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .product-thumbnail {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .table th,
+  .table td {
+    font-size: 0.875rem;
+  }
+}

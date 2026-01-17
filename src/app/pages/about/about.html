@@ -1,0 +1,143 @@
+<!-- About Us Page -->
+<div class="about-page">
+  <!-- Hero Section -->
+  <section class="hero-section bg-black text-white py-5">
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-lg-6">
+          <h1 class="display-4 fw-bold mb-3">
+            About <span class="text-red">MANYMOR</span>
+          </h1>
+          <p class="lead mb-4">
+            Your trusted partner for quality products and exceptional service since 2018.
+          </p>
+          <p class="text-gray">
+            At MANYMOR, we believe in delivering not just products, but experiences. 
+            Our mission is to make online shopping easy, reliable, and enjoyable for everyone.
+          </p>
+        </div>
+        <div class="col-lg-6">
+          <img src="https://images.unsplash.com/photo-1556740758-90de374c12ad?auto=format&fit=crop&w=800&q=80" 
+               alt="About Us" 
+               class="img-fluid rounded shadow">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Our Story Section -->
+  <section class="story-section py-5">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 mx-auto text-center">
+          <h2 class="fw-bold mb-4">Our Story</h2>
+          <p class="text-muted mb-4">
+            Founded in 2018, MANYMOR started with a simple vision: to create an online marketplace 
+            that prioritizes customer satisfaction above all else. What began as a small startup 
+            has grown into a trusted e-commerce platform serving customers worldwide.
+          </p>
+          <p class="text-muted mb-4">
+            We carefully curate our product selection, partnering with reliable suppliers to ensure 
+            quality and authenticity. Every item in our catalog is chosen with our customers' needs 
+            and preferences in mind.
+          </p>
+          <p class="text-muted">
+            Today, we're proud to serve over 1 million customers and continue to expand our offerings 
+            while maintaining the personal touch that sets us apart.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Our Values Section -->
+  <section class="values-section py-5 bg-light">
+    <div class="container">
+      <h2 class="text-center fw-bold mb-5">Why Choose Us</h2>
+      <div class="row g-4">
+        <div class="col-md-6 col-lg-3" *ngFor="let value of values">
+          <div class="card h-100 border-0 shadow-sm text-center">
+            <div class="card-body">
+              <div class="icon-wrapper mb-3">
+                <i class="bi {{ value.icon }} text-red" style="font-size: 3rem;"></i>
+              </div>
+              <h5 class="card-title fw-bold">{{ value.title }}</h5>
+              <p class="card-text text-muted">{{ value.description }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Team Section
+  <section class="team-section py-5">
+    <div class="container">
+      <h2 class="text-center fw-bold mb-5">Meet Our Team</h2>
+      <div class="row g-4">
+        <div class="col-md-6 col-lg-3" *ngFor="let member of teamMembers">
+          <div class="card h-100 border-0 shadow-sm">
+            <img [src]="member.image" 
+                 class="card-img-top" 
+                 [alt]="member.name"
+                 style="height: 250px; object-fit: cover;">
+            <div class="card-body text-center">
+              <h5 class="card-title fw-bold mb-1">{{ member.name }}</h5>
+              <p class="text-red small mb-2">{{ member.position }}</p>
+              <p class="card-text text-muted small">{{ member.bio }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section> -->
+
+  <!-- Timeline Section -->
+  <section class="timeline-section py-5 bg-light">
+    <div class="container">
+      <h2 class="text-center fw-bold mb-5">Our Journey</h2>
+      <div class="row">
+        <div class="col-lg-8 mx-auto">
+          <div class="timeline">
+            <div class="timeline-item mb-4" *ngFor="let milestone of milestones; let i = index">
+              <div class="d-flex align-items-center">
+                <div class="timeline-marker bg-red text-white rounded-circle d-flex align-items-center justify-content-center" 
+                     style="width: 60px; height: 60px; min-width: 60px;">
+                  <strong>{{ milestone.year }}</strong>
+                </div>
+                <div class="timeline-content ms-4">
+                  <h5 class="mb-0">{{ milestone.event }}</h5>
+                </div>
+              </div>
+              <div class="timeline-line bg-red ms-4" 
+                   *ngIf="i < milestones.length - 1"
+                   style="width: 2px; height: 40px; margin-left: 29px !important;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="cta-section py-5 bg-black text-white">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 mx-auto text-center">
+          <h2 class="fw-bold mb-3">Ready to Shop?</h2>
+          <p class="lead mb-4">
+            Explore our wide range of quality products and experience the MANYMOR difference.
+          </p>
+          <div class="d-flex gap-3 justify-content-center">
+            <a routerLink="/products" class="btn btn-red btn-lg">
+              <i class="bi bi-shop me-2"></i> Browse Products
+            </a>
+            <a routerLink="/contact" class="btn btn-outline-light btn-lg">
+              <i class="bi bi-envelope me-2"></i> Contact Us
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

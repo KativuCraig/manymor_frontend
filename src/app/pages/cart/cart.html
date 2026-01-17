@@ -1,0 +1,370 @@
+<!-- Cart Page Header -->
+<div class="container-fluid bg-light-gray py-4">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-md-8">
+        <h1 class="text-black fw-bold mb-2">Your Shopping Cart</h1>
+        <p class="text-gray mb-0" *ngIf="cart && cart.items.length > 0">
+          {{ cart.items.length }} items in your cart
+        </p>
+        <p class="text-gray mb-0" *ngIf="!cart || cart.items.length === 0">
+          Your cart is empty
+        </p>
+      </div>
+      <div class="col-md-4 text-md-end">
+        <a routerLink="/products" class="btn btn-outline-red">
+          <i class="bi bi-arrow-left me-2"></i> Continue Shopping
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Empty Cart State -->
+<div *ngIf="!isLoading && (!cart || cart.items.length === 0)" class="container py-5">
+  <div class="text-center">
+    <div class="empty-cart-icon mb-4">
+      <i class="bi bi-cart-x display-1 text-gray"></i>
+    </div>
+    <h3 class="text-black mb-3">Your cart is empty</h3>
+    <p class="text-gray mb-4">Looks like you haven't added any products to your cart yet.</p>
+    <a routerLink="/products" class="btn btn-red btn-lg">
+      <i class="bi bi-shop me-2"></i> Start Shopping
+    </a>
+  </div>
+</div>
+
+<!-- Loading State -->
+<div *ngIf="isLoading" class="container py-5">
+  <div class="text-center">
+    <div class="spinner-border text-red" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <p class="text-gray mt-2">Loading your cart...</p>
+  </div>
+</div>
+
+<!-- Cart Items -->
+<div *ngIf="!isLoading && cart && cart.items.length > 0" class="container py-4">
+  <div class="row">
+    <!-- Desktop Table View (hidden on mobile) -->
+    <div class="col-lg-8 d-none d-lg-block">
+      <div class="card border-0 shadow-sm mb-4">
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table align-middle">
+              <thead class="bg-light-gray">
+                <tr>
+                  <th scope="col" class="text-black fw-medium">Product</th>
+                  <th scope="col" class="text-black fw-medium text-center">Price</th>
+                  <th scope="col" class="text-black fw-medium text-center">Quantity</th>
+                  <th scope="col" class="text-black fw-medium text-center">Total</th>
+                  <th scope="col" class="text-black fw-medium text-center">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let item of cart.items" class="cart-item-row">
+                  <!-- Product Info -->
+                  <td>
+                    <div class="d-flex align-items-center">
+                      <div class="cart-item-image me-3">
+                        <img [src]="getProductImage(item.product)" 
+                             [alt]="item.product.name"
+                             class="img-fluid rounded"
+                             style="width: 80px; height: 80px; object-fit: cover;">
+                      </div>
+                      <div>
+                        <h6 class="text-black mb-1">{{ item.product.name }}</h6>
+                        <p class="text-gray small mb-0">{{ item.product.category_name }}</p>
+                        <div class="stock-info mt-1">
+                          <span class="badge" [ngClass]="getStockBadgeClass(item.product)">
+                            {{ getStockStatus(item.product) }}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                  
+                  <!-- Price -->
+                  <td class="text-center">
+                    <span class="text-black fw-medium">${{ item.product.price }}</span>
+                  </td>
+                  
+                  <!-- Quantity -->
+                  <td class="text-center">
+                    <div class="quantity-controls d-inline-flex align-items-center">
+                      <button class="btn btn-sm btn-outline-red" 
+                              (click)="updateQuantity(item, item.quantity - 1)"
+                              [disabled]="item.quantity <= 1 || isUpdating">
+                        <i class="bi bi-dash"></i>
+                      </button>
+                      <input type="number" 
+                             class="form-control form-control-sm mx-2 text-center"
+                             [(ngModel)]="item.quantity"
+                             min="1"
+                             [max]="item.product.stock_quantity"
+                             style="width: 60px;"
+                             (change)="validateQuantity(item)"
+                             [disabled]="isUpdating">
+                      <button class="btn btn-sm btn-outline-red" 
+                              (click)="updateQuantity(item, item.quantity + 1)"
+                              [disabled]="item.quantity >= item.product.stock_quantity || isUpdating">
+                        <i class="bi bi-plus"></i>
+                      </button>
+                    </div>
+                    <div *ngIf="item.quantity > item.product.stock_quantity" class="text-danger small mt-1">
+                      Only {{ item.product.stock_quantity }} available
+                    </div>
+                  </td>
+                  
+                  <!-- Total -->
+                  <td class="text-center">
+                    <span class="text-red fw-bold">${{ (item.product.price * item.quantity).toFixed(2) }}</span>
+                  </td>
+                  
+                  <!-- Actions -->
+                  <td class="text-center">
+                    <button class="btn btn-sm btn-outline-danger" 
+                            (click)="removeItem(item)"
+                            [disabled]="isUpdating">
+                      <i class="bi bi-trash"></i>
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          
+          <!-- Cart Actions -->
+          <div class="d-flex justify-content-between align-items-center mt-4">
+            <button class="btn btn-outline-red" (click)="clearCart()" [disabled]="isUpdating">
+              <i class="bi bi-trash me-2"></i> Clear Cart
+            </button>
+            <a routerLink="/products" class="btn btn-outline-red">
+              <i class="bi bi-arrow-left me-2"></i> Continue Shopping
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Mobile Card View (hidden on desktop) -->
+    <div class="col-12 d-block d-lg-none mb-4">
+      <div class="cart-mobile-items">
+        <div class="card border-0 shadow-sm mb-3" *ngFor="let item of cart.items">
+          <div class="card-body">
+            <!-- Product Header -->
+            <div class="d-flex align-items-start mb-3">
+              <div class="cart-item-image me-3">
+                <img [src]="getProductImage(item.product)" 
+                     [alt]="item.product.name"
+                     class="img-fluid rounded"
+                     style="width: 80px; height: 80px; object-fit: cover;">
+              </div>
+              <div class="flex-grow-1">
+                <h6 class="text-black mb-1">{{ item.product.name }}</h6>
+                <p class="text-gray small mb-1">{{ item.product.category_name }}</p>
+                <div class="stock-info mt-1">
+                  <span class="badge" [ngClass]="getStockBadgeClass(item.product)">
+                    {{ getStockStatus(item.product) }}
+                  </span>
+                </div>
+              </div>
+              <button class="btn btn-sm btn-outline-danger ms-2" 
+                      (click)="removeItem(item)"
+                      [disabled]="isUpdating">
+                <i class="bi bi-trash"></i>
+              </button>
+            </div>
+            
+            <!-- Price and Quantity Row -->
+            <div class="row g-3 mb-3">
+              <div class="col-6">
+                <div class="cart-mobile-price">
+                  <div class="text-gray small mb-1">Price</div>
+                  <div class="text-black fw-medium">${{ item.product.price }}</div>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="cart-mobile-quantity">
+                  <div class="text-gray small mb-2">Quantity</div>
+                  <div class="quantity-controls d-flex align-items-center justify-content-center">
+                    <button class="btn btn-sm btn-outline-red" 
+                            (click)="updateQuantity(item, item.quantity - 1)"
+                            [disabled]="item.quantity <= 1 || isUpdating">
+                      <i class="bi bi-dash"></i>
+                    </button>
+                    <input type="number" 
+                           class="form-control form-control-sm mx-2 text-center"
+                           [(ngModel)]="item.quantity"
+                           min="1"
+                           [max]="item.product.stock_quantity"
+                           style="width: 60px;"
+                           (change)="validateQuantity(item)"
+                           [disabled]="isUpdating">
+                    <button class="btn btn-sm btn-outline-red" 
+                            (click)="updateQuantity(item, item.quantity + 1)"
+                            [disabled]="item.quantity >= item.product.stock_quantity || isUpdating">
+                      <i class="bi bi-plus"></i>
+                    </button>
+                  </div>
+                  <div *ngIf="item.quantity > item.product.stock_quantity" class="text-danger small mt-1">
+                    Only {{ item.product.stock_quantity }} available
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Item Total -->
+            <div class="d-flex justify-content-between align-items-center pt-3 border-top">
+              <span class="text-black fw-medium">Item Total</span>
+              <span class="text-red fw-bold">${{ (item.product.price * item.quantity).toFixed(2) }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Mobile Cart Actions -->
+      <div class="d-flex justify-content-between align-items-center mt-3">
+        <button class="btn btn-outline-red" (click)="clearCart()" [disabled]="isUpdating">
+          <i class="bi bi-trash me-2"></i> Clear Cart
+        </button>
+        <a routerLink="/products" class="btn btn-outline-red">
+          <i class="bi bi-arrow-left me-2"></i> Continue Shopping
+        </a>
+      </div>
+    </div>
+    
+    <!-- Shipping Information (Desktop) -->
+    <div class="col-lg-8 d-none d-lg-block">
+      <div class="card border-0 shadow-sm mt-4">
+        <div class="card-body">
+          <h5 class="card-title text-black mb-3">
+            <i class="bi bi-truck text-red me-2"></i> Shipping Information
+          </h5>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label class="form-label text-black">Estimated Delivery</label>
+                <div class="alert alert-info mb-0">
+                  <i class="bi bi-info-circle me-2"></i>
+                  Delivery within 3-5 business days
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label class="form-label text-black">Shipping To</label>
+                <div class="alert alert-light border mb-0">
+                  <i class="bi bi-geo-alt me-2"></i>
+                  Harare, Zimbabwe (Free delivery)
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Order Summary (Desktop & Mobile) -->
+    <div class="col-lg-4 col-12">
+      <div class="card border-0 shadow-sm sticky-top" style="top: 20px;">
+        <div class="card-body">
+          <h5 class="card-title text-black mb-4">Order Summary</h5>
+          
+          <!-- Summary Items -->
+          <div class="mb-3">
+            <div class="d-flex justify-content-between mb-2">
+              <span class="text-gray">Subtotal ({{ cart.items.length }} items)</span>
+              <span class="text-black fw-medium">${{ getSubtotal().toFixed(2) }}</span>
+            </div>
+            <div class="d-flex justify-content-between mb-2">
+              <span class="text-gray">Shipping</span>
+              <span class="text-success">FREE</span>
+            </div>
+            <div class="d-flex justify-content-between mb-2">
+              <span class="text-gray">Tax (15%)</span>
+              <span class="text-black fw-medium">${{ getTax().toFixed(2) }}</span>
+            </div>
+            <hr>
+            <div class="d-flex justify-content-between mb-3">
+              <span class="text-black fw-bold">Total</span>
+              <span class="text-red fw-bold fs-5">${{ getTotal().toFixed(2) }}</span>
+            </div>
+          </div>
+          
+          <!-- Checkout Button -->
+          <button class="btn btn-red w-100 py-3 mb-3" 
+                  (click)="proceedToCheckout()"
+                  [disabled]="isUpdating || !isCartValid()">
+            <i class="bi bi-lock me-2"></i> Proceed to Checkout
+          </button>
+          
+          <!-- Cart Issues -->
+          <div *ngIf="hasOutOfStockItems()" class="alert alert-warning">
+            <i class="bi bi-exclamation-triangle me-2"></i>
+            Some items are out of stock. Please remove them to proceed.
+          </div>
+          
+          <div *ngIf="hasLowStockItems()" class="alert alert-info">
+            <i class="bi bi-info-circle me-2"></i>
+            Some items have low stock. Order soon to avoid disappointment.
+          </div>
+          
+          <!-- Payment Methods -->
+          <div class="mt-4">
+            <h6 class="text-black mb-3">We Accept</h6>
+            <div class="d-flex gap-2 flex-wrap">
+              <span class="badge bg-light text-black border py-2 px-3 mb-2">
+                <i class="bi bi-credit-card me-1"></i> Card
+              </span>
+              <span class="badge bg-light text-black border py-2 px-3 mb-2">
+                <i class="bi bi-bank me-1"></i> Bank Transfer
+              </span>
+              <span class="badge bg-light text-black border py-2 px-3 mb-2">
+                <i class="bi bi-phone me-1"></i> Mobile Money
+              </span>
+            </div>
+          </div>
+          
+          <!-- Security Info -->
+          <div class="mt-4 pt-3 border-top">
+            <div class="d-flex align-items-center">
+              <i class="bi bi-shield-check text-success me-2"></i>
+              <small class="text-gray">Secure checkout · SSL encrypted</small>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Shipping Information (Mobile) -->
+      <div class="card border-0 shadow-sm mt-4 d-block d-lg-none">
+        <div class="card-body">
+          <h5 class="card-title text-black mb-3">
+            <i class="bi bi-truck text-red me-2"></i> Shipping Information
+          </h5>
+          <div class="row">
+            <div class="col-12">
+              <div class="mb-3">
+                <label class="form-label text-black">Estimated Delivery</label>
+                <div class="alert alert-info mb-0">
+                  <i class="bi bi-info-circle me-2"></i>
+                  Delivery within 3-5 business days
+                </div>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="mb-3">
+                <label class="form-label text-black">Shipping To</label>
+                <div class="alert alert-light border mb-0">
+                  <i class="bi bi-geo-alt me-2"></i>
+                  Harare, Zimbabwe (Free delivery)
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

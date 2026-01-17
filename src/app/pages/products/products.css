@@ -1,0 +1,204 @@
+/* Products Page */
+.page-link {
+  color: var(--primary-black);
+  border: 1px solid var(--primary-gray);
+  transition: all 0.3s ease;
+}
+
+.page-link:hover {
+  color: var(--primary-white);
+  background-color: var(--primary-red);
+  border-color: var(--primary-red);
+}
+
+.page-item.active .page-link {
+  background-color: var(--primary-red);
+  border-color: var(--primary-red);
+  color: var(--primary-white);
+}
+
+.page-item.disabled .page-link {
+  color: var(--primary-gray);
+  background-color: var(--light-gray);
+  border-color: var(--primary-gray);
+}
+
+/* Product Cards */
+.product-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  height: 100%;
+}
+
+.product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15) !important;
+}
+
+.product-image {
+  height: 200px;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.product-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.product-card:hover .product-image img {
+  transform: scale(1.05);
+}
+
+/* List View */
+.list-view .product-image-list {
+  height: 200px;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.list-view .product-image-list img {
+  transition: transform 0.3s ease;
+}
+
+.list-view .card:hover .product-image-list img {
+  transform: scale(1.05);
+}
+
+.object-fit-cover {
+  object-fit: cover;
+}
+
+/* Form Controls */
+.form-select, .form-control {
+  border-color: var(--primary-gray);
+}
+
+.form-select:focus, .form-control:focus {
+  border-color: var(--primary-red);
+  box-shadow: 0 0 0 0.25rem rgba(255, 0, 0, 0.25);
+}
+
+/* Category List */
+.list-group-item {
+  color: var(--primary-black);
+  transition: all 0.3s ease;
+}
+
+.list-group-item:hover {
+  background-color: rgba(255, 0, 0, 0.1);
+  color: var(--primary-red);
+}
+
+.list-group-item.active {
+  background-color: var(--primary-red) !important;
+  border-color: var(--primary-red) !important;
+  color: var(--primary-white) !important;
+}
+
+/* Badges */
+.badge {
+  font-weight: 500;
+}
+
+/* Promotion Badge */
+.promotion-badge {
+  font-weight: 600;
+  font-size: 0.75rem;
+  padding: 0.4rem 0.75rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  animation: pulse-badge 2s ease-in-out infinite;
+}
+
+@keyframes pulse-badge {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+/* Price Section */
+.price-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.price-section .text-decoration-line-through {
+  font-size: 0.9rem;
+}
+
+/* Savings Text */
+.savings-text {
+  padding: 0.25rem 0.5rem;
+  background-color: rgba(40, 167, 69, 0.1);
+  border-radius: 4px;
+  display: inline-block;
+}
+
+.savings-text small {
+  font-size: 0.85rem;
+}
+
+/* View Toggle */
+.btn-group .btn.active {
+  background-color: var(--primary-red);
+  border-color: var(--primary-red);
+  color: var(--primary-white);
+}
+
+/* Line Clamp */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .showFilters {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1050;
+    overflow-y: auto;
+  }
+  
+  .showFilters .col-lg-3 {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 300px;
+    height: 100%;
+    background-color: var(--primary-white);
+    z-index: 1060;
+    overflow-y: auto;
+  }
+  
+  .list-view .product-image-list {
+    height: 150px;
+  }
+}
+
+/* Multiple images badge */
+.position-absolute.bottom-0.end-0 .badge,
+.position-absolute.bottom-0.start-0 .badge {
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+  background-color: rgba(0, 0, 0, 0.8) !important;
+  border: 1px solid var(--primary-white);
+}
+
+.position-absolute.bottom-0.end-0 .badge:hover,
+.position-absolute.bottom-0.start-0 .badge:hover {
+  background-color: var(--primary-red) !important;
+}
