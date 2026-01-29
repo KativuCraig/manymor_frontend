@@ -3,6 +3,12 @@ import { Observable, BehaviorSubject } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { Api, User, AuthResponse } from './api';
+import { 
+  TwoFactorSetupResponse, 
+  TwoFactorVerifyResponse, 
+  TwoFactorStatusResponse, 
+  TwoFactorDisableRequest 
+} from '../models/api-responses';
 
 @Injectable({
   providedIn: 'root'
@@ -18,9 +24,9 @@ export class AuthService {
     this.loadUserFromStorage();
   }
 
-  // Login
-  login(email: string, password: string): Observable<AuthResponse> {
-    return this.apiService.login(email, password)
+  // Login (with optional 2FA code)
+  login(email: string, password: string, twoFactorCode?: string): Observable<AuthResponse> {
+    return this.apiService.login(email, password, twoFactorCode)
       .pipe(
         tap(response => {
           this.setSession(response);
@@ -120,5 +126,35 @@ export class AuthService {
 
   private hasLocalStorage(): boolean {
     return (typeof localStorage !== 'undefined');
+  }
+
+  // ==================== 2FA METHODS ====================
+  
+  /**
+   * Setup 2FA - Generate QR code
+   */
+  setup2FA(): Observable<TwoFactorSetupResponse> {
+    return this.apiService.setup2FA();
+  }
+
+  /**
+   * Verify 2FA code and enable 2FA
+   */
+  verify2FA(code: string): Observable<TwoFactorVerifyResponse> {
+    return this.apiService.verify2FA(code);
+  }
+
+  /**
+   * Disable 2FA
+   */
+  disable2FA(password: string): Observable<{ message: string }> {
+    return this.apiService.disable2FA({ password });
+  }
+
+  /**
+   * Check 2FA status
+   */
+  get2FAStatus(): Observable<TwoFactorStatusResponse> {
+    return this.apiService.get2FAStatus();
   }
 }

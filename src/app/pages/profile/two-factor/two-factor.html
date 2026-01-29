@@ -1,0 +1,279 @@
+<div class="container py-4">
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="text-center py-5">
+    <div class="spinner-border text-red" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div *ngIf="!isLoading">
+    <!-- Header -->
+    <div class="mb-4">
+      <h3 class="text-black fw-bold">
+        <i class="bi bi-shield-lock me-2"></i>Two-Factor Authentication
+      </h3>
+      <p class="text-gray">
+        Add an extra layer of security to your account
+      </p>
+    </div>
+
+    <!-- 2FA Status Card -->
+    <div class="card shadow-sm border-0 mb-4">
+      <div class="card-body p-4">
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <h5 class="text-black fw-bold mb-2">
+              Status: 
+              <span [class.text-success]="isEnabled" [class.text-gray]="!isEnabled">
+                {{ isEnabled ? 'Enabled' : 'Disabled' }}
+              </span>
+            </h5>
+            <p class="text-gray mb-0">
+              {{ isEnabled ? 'Your account is protected with 2FA' : '2FA is currently disabled for your account' }}
+            </p>
+          </div>
+          
+          <!-- Enable/Disable Button -->
+          <div *ngIf="!showSetup && !showDisableForm">
+            <button 
+              *ngIf="!isEnabled" 
+              class="btn btn-red"
+              (click)="startSetup()"
+              [disabled]="isProcessing"
+            >
+              <i class="bi bi-shield-check me-2"></i>
+              Enable 2FA
+            </button>
+            
+            <button 
+              *ngIf="isEnabled" 
+              class="btn btn-outline-danger"
+              (click)="showDisable()"
+              [disabled]="isProcessing"
+            >
+              <i class="bi bi-shield-x me-2"></i>
+              Disable 2FA
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Setup 2FA Section -->
+    <div *ngIf="showSetup" class="card shadow-sm border-0 mb-4">
+      <div class="card-body p-4">
+        <h5 class="text-black fw-bold mb-3">
+          <i class="bi bi-qr-code me-2"></i>Setup Two-Factor Authentication
+        </h5>
+
+        <div class="row">
+          <!-- QR Code -->
+          <div class="col-md-6 text-center mb-4">
+            <p class="text-gray mb-3">
+              <strong>Step 1:</strong> Scan this QR code with your authenticator app
+            </p>
+            <div class="qr-code-container p-3 bg-light rounded">
+              <img [src]="qrCodeUrl" alt="2FA QR Code" class="img-fluid" style="max-width: 250px;">
+            </div>
+            <p class="text-muted small mt-3">
+              <strong>Manual Entry Key:</strong><br>
+              <code class="bg-light p-2 rounded d-inline-block">{{ secret }}</code>
+            </p>
+          </div>
+
+          <!-- Verification -->
+          <div class="col-md-6">
+            <p class="text-gray mb-3">
+              <strong>Step 2:</strong> Enter the 6-digit code from your app
+            </p>
+            
+            <div class="mb-3">
+              <label for="verificationCode" class="form-label text-black">Verification Code</label>
+              <input 
+                type="text" 
+                class="form-control form-control-lg text-center"
+                id="verificationCode"
+                [(ngModel)]="verificationCode"
+                placeholder="000000"
+                maxlength="6"
+                pattern="[0-9]{6}"
+                style="letter-spacing: 0.5em; font-size: 1.5rem;"
+              >
+            </div>
+
+            <div class="d-grid gap-2">
+              <button 
+                class="btn btn-red"
+                (click)="verifyAndEnable()"
+                [disabled]="isProcessing || verificationCode.length !== 6"
+              >
+                <span *ngIf="!isProcessing">
+                  <i class="bi bi-check-circle me-2"></i>
+                  Verify & Enable
+                </span>
+                <span *ngIf="isProcessing">
+                  <span class="spinner-border spinner-border-sm me-2"></span>
+                  Verifying...
+                </span>
+              </button>
+              
+              <button 
+                class="btn btn-outline-secondary"
+                (click)="cancelSetup()"
+                [disabled]="isProcessing"
+              >
+                Cancel
+              </button>
+            </div>
+
+            <!-- Recommended Apps -->
+            <div class="mt-4 p-3 bg-light rounded">
+              <p class="text-black small fw-semibold mb-2">
+                <i class="bi bi-info-circle me-1"></i>Recommended Authenticator Apps:
+              </p>
+              <ul class="small text-gray mb-0">
+                <li>Google Authenticator</li>
+                <li>Microsoft Authenticator</li>
+                <li>Authy</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Disable 2FA Form -->
+    <div *ngIf="showDisableForm" class="card shadow-sm border-0 mb-4">
+      <div class="card-body p-4">
+        <h5 class="text-black fw-bold mb-3">
+          <i class="bi bi-shield-x me-2"></i>Disable Two-Factor Authentication
+        </h5>
+        
+        <div class="alert alert-warning">
+          <i class="bi bi-exclamation-triangle me-2"></i>
+          Disabling 2FA will make your account less secure. Enter your password to confirm.
+        </div>
+
+        <form [formGroup]="disableForm" (ngSubmit)="disable2FA()">
+          <div class="mb-3">
+            <label for="password" class="form-label text-black">Password</label>
+            <input 
+              type="password" 
+              class="form-control"
+              id="password"
+              formControlName="password"
+              placeholder="Enter your password"
+            >
+          </div>
+
+          <div class="d-grid gap-2">
+            <button 
+              type="submit" 
+              class="btn btn-danger"
+              [disabled]="disableForm.invalid || isProcessing"
+            >
+              <span *ngIf="!isProcessing">
+                <i class="bi bi-shield-x me-2"></i>
+                Disable 2FA
+              </span>
+              <span *ngIf="isProcessing">
+                <span class="spinner-border spinner-border-sm me-2"></span>
+                Processing...
+              </span>
+            </button>
+            
+            <button 
+              type="button"
+              class="btn btn-outline-secondary"
+              (click)="cancelDisable()"
+              [disabled]="isProcessing"
+            >
+              Cancel
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Information Card -->
+    <div class="card shadow-sm border-0">
+      <div class="card-body p-4">
+        <h5 class="text-black fw-bold mb-3">
+          <i class="bi bi-info-circle me-2"></i>About Two-Factor Authentication
+        </h5>
+        
+        <p class="text-gray">
+          Two-factor authentication (2FA) adds an extra layer of security to your account by requiring 
+          both your password and a verification code from your authenticator app when signing in.
+        </p>
+
+        <div class="row mt-3">
+          <div class="col-md-6 mb-3">
+            <div class="d-flex">
+              <i class="bi bi-shield-check text-success fs-4 me-3"></i>
+              <div>
+                <h6 class="text-black mb-1">Enhanced Security</h6>
+                <p class="text-gray small mb-0">
+                  Protects your account even if your password is compromised
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6 mb-3">
+            <div class="d-flex">
+              <i class="bi bi-phone text-red fs-4 me-3"></i>
+              <div>
+                <h6 class="text-black mb-1">Mobile App Required</h6>
+                <p class="text-gray small mb-0">
+                  Use any TOTP-compatible authenticator app on your phone
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Backup Codes Modal -->
+<div class="modal fade show d-block" *ngIf="showBackupCodes" tabindex="-1" style="background: rgba(0,0,0,0.5);">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header border-0">
+        <h5 class="modal-title text-black fw-bold">
+          <i class="bi bi-key me-2"></i>Backup Codes
+        </h5>
+      </div>
+      <div class="modal-body">
+        <div class="alert alert-warning">
+          <i class="bi bi-exclamation-triangle me-2"></i>
+          <strong>Important:</strong> Save these backup codes in a safe place. 
+          Each code can be used once if you lose access to your authenticator app.
+        </div>
+
+        <div class="backup-codes bg-light p-3 rounded mb-3" style="font-family: monospace;">
+          <div *ngFor="let code of backupCodes" class="py-1">
+            {{ code }}
+          </div>
+        </div>
+
+        <div class="d-grid gap-2">
+          <button class="btn btn-outline-secondary" (click)="copyBackupCodes()">
+            <i class="bi bi-clipboard me-2"></i>
+            Copy Codes
+          </button>
+          <button class="btn btn-outline-secondary" (click)="downloadBackupCodes()">
+            <i class="bi bi-download me-2"></i>
+            Download Codes
+          </button>
+          <button class="btn btn-red" (click)="closeBackupCodes()">
+            I've Saved My Codes
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

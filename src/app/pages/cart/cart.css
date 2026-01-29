@@ -90,6 +90,43 @@
   .quantity-controls {
     justify-content: center;
   }
+  
+  /* Reduce all button sizes on mobile */
+  .btn {
+    padding: 0.4rem 0.75rem !important;
+    font-size: 0.85rem !important;
+  }
+  
+  .btn-lg {
+    padding: 0.5rem 1rem !important;
+    font-size: 0.9rem !important;
+  }
+  
+  .btn-sm {
+    padding: 0.3rem 0.6rem !important;
+    font-size: 0.8rem !important;
+  }
+  
+  .btn i {
+    font-size: 0.85rem;
+  }
+  
+  /* Reduce checkout button size */
+  .card-body .btn.w-100 {
+    padding: 0.6rem 1rem !important;
+    font-size: 0.9rem !important;
+  }
+  
+  /* Reduce quantity control buttons */
+  .quantity-controls .btn {
+    padding: 0.3rem 0.5rem !important;
+    min-width: 32px;
+  }
+  
+  .quantity-controls input {
+    font-size: 0.85rem;
+    max-width: 50px;
+  }
 }
 
 /* Badge styles */

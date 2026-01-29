@@ -49,4 +49,43 @@
     min-width: 50px !important;
     font-size: 0.75rem;
   }
+  
+  /* Reduce button sizes on mobile */
+  .btn {
+    padding: 0.4rem 0.75rem !important;
+    font-size: 0.85rem !important;
+  }
+  
+  .btn-lg {
+    padding: 0.5rem 1rem !important;
+    font-size: 0.9rem !important;
+  }
+  
+  .btn i {
+    font-size: 0.85rem;
+  }
+  
+  /* Optimize service cards for 2-column mobile layout */
+  .values-section .card-body {
+    padding: 1rem;
+  }
+  
+  .values-section .icon-wrapper {
+    height: 50px;
+    margin-bottom: 0.5rem !important;
+  }
+  
+  .values-section .icon-wrapper i {
+    font-size: 1.75rem !important;
+  }
+  
+  .values-section .card-title {
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .values-section .card-text {
+    font-size: 0.8rem;
+    margin-bottom: 0;
+  }
 }

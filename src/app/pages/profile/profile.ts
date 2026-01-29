@@ -1,25 +1,6 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { Api } from '../../core/services/api';
-import { forkJoin } from 'rxjs';
+import { Api, UserProfile, Address } from '../../core/services/api';
 import { finalize } from 'rxjs/operators';
-
-interface UserProfile {
-  id: number;
-  email: string;
-  first_name: string;
-  last_name: string;
-  phone_number: string;
-  role: string;
-  date_joined: string;
-}
-
-interface Address {
-  id: number;
-  label: string;
-  city: string;
-  address_line: string;
-  is_default: boolean;
-}
 
 @Component({
   selector: 'app-profile',
@@ -35,10 +16,7 @@ export class Profile implements OnInit {
   // Profile edit
   showEditProfileModal = false;
   editProfileForm = {
-    first_name: '',
-    last_name: '',
-    phone_number: '',
-    email: ''
+    phone: ''
   };
   
   // Address modals
@@ -64,10 +42,7 @@ export class Profile implements OnInit {
   loadProfile(): void {
     this.isLoading = true;
     
-    forkJoin({
-      profile: this.apiService.getProfile(),
-      addresses: this.apiService.getAddresses()
-    })
+    this.apiService.getProfile()
     .pipe(
       finalize(() => {
         this.isLoading = false;
@@ -76,8 +51,8 @@ export class Profile implements OnInit {
     )
     .subscribe({
       next: (response) => {
-        this.profile = response.profile;
-        this.addresses = response.addresses;
+        this.profile = response;
+        this.addresses = response.addresses || [];
         this.cdr.detectChanges();
       },
       error: (error) => {
@@ -91,10 +66,7 @@ export class Profile implements OnInit {
   openEditProfileModal(): void {
     if (this.profile) {
       this.editProfileForm = {
-        first_name: this.profile.first_name || '',
-        last_name: this.profile.last_name || '',
-        phone_number: this.profile.phone_number || '',
-        email: this.profile.email
+        phone: this.profile.phone || ''
       };
       this.showEditProfileModal = true;
     }
@@ -103,16 +75,13 @@ export class Profile implements OnInit {
   closeEditProfileModal(): void {
     this.showEditProfileModal = false;
     this.editProfileForm = {
-      first_name: '',
-      last_name: '',
-      phone_number: '',
-      email: ''
+      phone: ''
     };
   }
 
   saveProfile(): void {
-    if (!this.editProfileForm.first_name || !this.editProfileForm.last_name) {
-      alert('First name and last name are required');
+    if (!this.editProfileForm.phone) {
+      alert('Phone number is required');
       return;
     }
 
@@ -128,6 +97,7 @@ export class Profile implements OnInit {
       .subscribe({
         next: (response) => {
           this.profile = response;
+          this.addresses = response.addresses || [];
           alert('Profile updated successfully!');
           this.closeEditProfileModal();
           this.cdr.detectChanges();

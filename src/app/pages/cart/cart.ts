@@ -223,13 +223,8 @@ export class CartComponent implements OnInit {
     }, 0);
   }
 
-  getTax(): number {
-    // Assuming 15% tax rate
-    return this.getSubtotal() * 0.15;
-  }
-
   getTotal(): number {
-    return this.getSubtotal() + this.getTax();
+    return this.getSubtotal();
   }
 
   hasOutOfStockItems(): boolean {

@@ -18,10 +18,14 @@ import { Products} from './pages/products/products';
 import { ProductDetail } from './pages/product-detail/product-detail';
 import { CartComponent } from './pages/cart/cart';
 import { Checkout } from './pages/checkout/checkout';
+import { PaymentSuccess } from './pages/payment-success/payment-success';
 import { OrderConfirmation } from './pages/order-confirmation/order-confirmation';
 import { Profile } from './pages/profile/profile';
+import { TwoFactor } from './pages/profile/two-factor/two-factor';
 import { About } from './pages/about/about';
 import { Contact } from './pages/contact/contact';
+import { Terms } from './pages/terms/terms';
+import { Privacy } from './pages/privacy/privacy';
 
 // Admin Pages
 import { Dashboard } from './admin/dashboard/dashboard';
@@ -47,7 +51,9 @@ const routes: Routes = [
       { path: 'products', component: Products },
       { path: 'products/:id', component: ProductDetail },
       { path: 'about', component: About },
-      { path: 'contact', component: Contact }
+      { path: 'contact', component: Contact },
+      { path: 'terms', component: Terms },
+      { path: 'privacy', component: Privacy }
     ]
   },
 
@@ -59,8 +65,10 @@ const routes: Routes = [
     children: [
       { path: 'cart', component: CartComponent },
       { path: 'checkout', component: Checkout },
+      { path: 'payment-success', component: PaymentSuccess },
       { path: 'order-confirmation/:id', component: OrderConfirmation },
-      { path: 'profile', component: Profile }
+      { path: 'profile', component: Profile },
+      { path: 'profile/two-factor', component: TwoFactor }
     ]
   },
   
@@ -78,7 +86,8 @@ const routes: Routes = [
       { path: 'delivery', component: Delivery },
       { path: 'customers', component: Customers },
       { path: 'promotions', component: Promotions },
-      { path: 'profile', component: Profile }
+      { path: 'profile', component: Profile },
+      { path: 'profile/two-factor', component: TwoFactor }
     ]
   },
   

@@ -14,37 +14,33 @@ export class Contact {
 
   // Contact information
   contactInfo = {
-    address: '123 E-Commerce Street, Digital City, DC 12345',
-    phone: '+1 (555) 123-4567',
-    email: 'support@manymor.com',
-    hours: 'Mon - Fri: 9:00 AM - 6:00 PM'
+    address: 'Harare, Zimbabwe',
+    phone: 'Contact us via email',
+    email: 'support@manymor.co.zw',
+    hours: 'Mon - Fri: 8:00 AM - 5:00 PM'
   };
 
   // Social media links
   socialLinks = [
-    { icon: 'bi-facebook', url: '#', name: 'Facebook' },
-    { icon: 'bi-twitter', url: '#', name: 'Twitter' },
-    { icon: 'bi-instagram', url: '#', name: 'Instagram' },
-    { icon: 'bi-linkedin', url: '#', name: 'LinkedIn' }
+    { icon: 'bi-facebook', url: 'https://facebook.com', name: 'Facebook' },
+    { icon: 'bi-twitter', url: 'https://twitter.com', name: 'Twitter' },
+    { icon: 'bi-instagram', url: 'https://instagram.com', name: 'Instagram' },
+    { icon: 'bi-linkedin', url: 'https://linkedin.com', name: 'LinkedIn' }
   ];
 
   // FAQ items
   faqs = [
     {
-      question: 'What are your shipping options?',
-      answer: 'We offer standard (5-7 days), express (2-3 days), and overnight shipping options. Free standard shipping on orders over $50.'
+      question: 'What are your delivery options?',
+      answer: 'We offer standard (5-7 days), express (2-3 days), and overnight delivery options. Free standard delivery on orders over $50.'
     },
     {
       question: 'What is your return policy?',
       answer: 'We accept returns within 30 days of delivery. Items must be unused and in original packaging. Refunds are processed within 5-7 business days.'
     },
     {
-      question: 'Do you ship internationally?',
-      answer: 'Yes! We ship to over 50 countries worldwide. International shipping times vary by location (typically 7-14 days).'
-    },
-    {
       question: 'How can I track my order?',
-      answer: 'Once your order ships, you\'ll receive a tracking number via email. You can also track orders from your account dashboard.'
+      answer: 'Once your order is dispatched, you\'ll receive a tracking number via email. You can also track orders from your account dashboard.'
     }
   ];
 

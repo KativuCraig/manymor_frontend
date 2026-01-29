@@ -11,6 +11,12 @@
 
           <!-- Login Form -->
           <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+            <!-- Error Message -->
+            <div *ngIf="errorMessage" class="alert alert-danger mb-3">
+              <i class="bi bi-exclamation-triangle me-2"></i>
+              {{ errorMessage }}
+            </div>
+
             <!-- Email -->
             <div class="mb-3">
               <label for="email" class="form-label text-black">Email Address</label>
@@ -23,7 +29,8 @@
                 placeholder="Enter your email"
               >
               <div class="invalid-feedback" *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched">
-                Please enter a valid email address.
+                <span *ngIf="loginForm.get('email')?.errors?.['required']">Email is required.</span>
+                <span *ngIf="loginForm.get('email')?.errors?.['email']">Please enter a valid email address.</span>
               </div>
             </div>
 
@@ -43,17 +50,22 @@
               </div>
             </div>
 
-            <!-- Remember Me & Forgot Password -->
-            <div class="d-flex justify-content-between align-items-center mb-4">
-              <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="remember" formControlName="remember">
-                <label class="form-check-label text-gray" for="remember">
-                  Remember me
-                </label>
-              </div>
-              <a routerLink="/forgot-password" class="text-red text-decoration-none">
-                Forgot Password?
-              </a>
+            <!-- 2FA Code (shown only when required) -->
+            <div class="mb-4" *ngIf="requires2FA">
+              <label for="twoFactorCode" class="form-label text-black">
+                <i class="bi bi-shield-lock me-2"></i>Authentication Code
+              </label>
+              <input 
+                type="text" 
+                class="form-control" 
+                id="twoFactorCode"
+                [(ngModel)]="twoFactorCode"
+                [ngModelOptions]="{standalone: true}"
+                placeholder="Enter 6-digit code"
+                maxlength="6"
+                pattern="[0-9]{6}"
+              >
+              <small class="text-muted">Enter the 6-digit code from your authenticator app</small>
             </div>
 
             <!-- Submit Button -->
@@ -68,11 +80,6 @@
                 Signing In...
               </span>
             </button>
-
-            <!-- Error Message -->
-            <div *ngIf="errorMessage" class="alert alert-danger mt-3">
-              {{ errorMessage }}
-            </div>
 
             <!-- Sign Up Link -->
             <div class="text-center mt-4">

@@ -1,9 +1,12 @@
 import { Component, OnInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
+import { Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
 import { finalize } from 'rxjs/operators';
+import { ToastrService } from 'ngx-toastr';
 
 import { Api, Product, Category, Order } from '../../core/services/api';
 import { AuthService } from '../../core/services/auth';
+import { CartService } from '../../core/services/cart';
 import { PromotionService } from '../../core/services/promotion.service';
 import { CarouselPromotion } from '../../core/models/promotion.model';
 
@@ -35,8 +38,11 @@ export class Home implements OnInit, OnDestroy {
 
   constructor(
     private api: Api,
+    private router: Router,
     public authService: AuthService,
+    private cartService: CartService,
     private promotionService: PromotionService,
+    private toastr: ToastrService,
     private cdr: ChangeDetectorRef
   ) {}
 
@@ -210,19 +216,34 @@ export class Home implements OnInit, OnDestroy {
    * Add product to cart
    */
   addToCart(product: Product): void {
-    if (product.stock_quantity === 0) {
-      alert('Sorry, this product is out of stock!');
+    // Check authentication first
+    if (!this.authService.isAuthenticated()) {
+      this.toastr.info('Please login to add items to cart', 'Login Required');
+      this.router.navigate(['/login'], { 
+        queryParams: { returnUrl: '/home' } 
+      });
       return;
     }
 
-    this.api.addToCart(product.id, 1).subscribe({
+    if (product.stock_quantity === 0) {
+      this.toastr.warning('This product is out of stock!', 'Stock Alert');
+      return;
+    }
+
+    this.cartService.addToCart(product.id, 1).subscribe({
       next: (cart) => {
-        console.log('Product added to cart:', product.name);
-        alert(`${product.name} added to cart!`);
+        this.toastr.success(`${product.name} added to cart!`, 'Success');
       },
       error: (error) => {
         console.error('Failed to add to cart:', error);
-        alert('Failed to add product to cart. Please try again.');
+        if (error.message.includes('Authentication required')) {
+          this.toastr.info('Please login to add items to cart', 'Login Required');
+          this.router.navigate(['/login'], { 
+            queryParams: { returnUrl: '/home' } 
+          });
+        } else {
+          this.toastr.error('Failed to add product to cart', 'Error');
+        }
       }
     });
   }

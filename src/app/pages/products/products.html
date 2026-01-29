@@ -1,17 +1,19 @@
 <!-- Products Page Header -->
-<div class="container-fluid bg-light-gray py-4">
+<div class="products-hero bg-gradient-dark text-white py-5">
   <div class="container">
     <div class="row align-items-center">
       <div class="col-md-8">
-        <h1 class="text-black fw-bold mb-2">Products</h1>
-        <p class="text-gray mb-0">
-          Browse our wide selection of quality products. {{ totalProducts }} items available.
+        <h1 class="display-5 fw-bold mb-3">
+          Discover Amazing <span class="text-red">Products</span>
+        </h1>
+        <p class="lead mb-0 text-white-50">
+          Browse our curated selection of {{ totalProducts }} quality products
         </p>
       </div>
-      <div class="col-md-4 text-md-end">
-        <button class="btn btn-red" (click)="toggleFilters()">
+      <div class="col-md-4 text-md-end mt-3 mt-md-0">
+        <button class="btn btn-red btn-lg shadow-sm" (click)="toggleFilters()">
           <i class="bi bi-funnel me-2"></i> 
-          {{ showFilters ? 'Hide Filters' : 'Show Filters' }}
+          {{ showFilters ? 'Hide' : 'Show' }} Filters
         </button>
       </div>
     </div>
@@ -19,119 +21,138 @@
 </div>
 
 <!-- Main Content -->
-<div class="container py-4">
-  <div class="row">
+<div class="container py-5">
+  <div class="row g-4">
     <!-- Filters Sidebar -->
     <div class="col-lg-3" *ngIf="showFilters">
-      <div class="card border-0 shadow-sm mb-4">
-        <div class="card-body">
-          <h5 class="card-title text-black mb-3">
-            <i class="bi bi-filter text-red me-2"></i> Filters
-          </h5>
+      <div class="filters-sidebar">
+        <div class="card border-0 shadow-sm mb-4 sticky-top" style="top: 20px;">
+          <div class="card-body p-4">
+            <div class="d-flex align-items-center mb-4">
+              <i class="bi bi-sliders text-red fs-4 me-2"></i>
+              <h5 class="card-title text-black mb-0 fw-bold">Filter Products</h5>
+            </div>
           
-          <!-- Search -->
-          <div class="mb-4">
-            <label class="form-label text-black fw-medium">Search</label>
-            <div class="input-group">
-              <input type="text" 
-                     class="form-control" 
-                     placeholder="Search products..."
-                     [(ngModel)]="searchQuery"
-                     (keyup.enter)="updateFilters()">
-              <button class="btn btn-outline-red" type="button" (click)="updateFilters()">
-                <i class="bi bi-search"></i>
+            <!-- Search -->
+            <div class="mb-4">
+              <label class="form-label text-black fw-semibold mb-2">
+                <i class="bi bi-search text-red me-2"></i>Search
+              </label>
+              <div class="input-group shadow-sm">
+                <input type="text" 
+                       class="form-control border-end-0" 
+                       placeholder="Search products..."
+                       [(ngModel)]="searchQuery"
+                       (keyup.enter)="updateFilters()">
+                <button class="btn btn-outline-secondary border-start-0" type="button" (click)="updateFilters()">
+                  <i class="bi bi-search"></i>
+                </button>
+              </div>
+            </div>
+          
+            <!-- Category Filter -->
+            <div class="mb-4">
+              <label class="form-label text-black fw-semibold mb-2">
+                <i class="bi bi-tag text-red me-2"></i>Category
+              </label>
+              <select class="form-select shadow-sm" [(ngModel)]="selectedCategory" (change)="updateFilters()">
+                <option value="">All Categories</option>
+                <option *ngFor="let category of categories" [value]="category.id">
+                  {{ category.name }}
+                </option>
+              </select>
+            </div>
+          
+            <!-- Price Range -->
+            <div class="mb-4">
+              <label class="form-label text-black fw-semibold mb-2">
+                <i class="bi bi-currency-dollar text-red me-2"></i>Price Range
+              </label>
+              <div class="row g-2">
+                <div class="col">
+                  <input type="number" 
+                         class="form-control shadow-sm" 
+                         placeholder="Min" 
+                         [(ngModel)]="minPrice"
+                         (change)="updateFilters()">
+                </div>
+                <div class="col-auto d-flex align-items-center">
+                  <span class="text-gray">-</span>
+                </div>
+                <div class="col">
+                  <input type="number" 
+                         class="form-control shadow-sm" 
+                         placeholder="Max" 
+                         [(ngModel)]="maxPrice"
+                         (change)="updateFilters()">
+                </div>
+              </div>
+            </div>
+          
+            <!-- Stock Filter -->
+            <div class="mb-4">
+              <label class="form-label text-black fw-semibold mb-2">
+                <i class="bi bi-box text-red me-2"></i>Availability
+              </label>
+              <div class="form-check">
+                <input class="form-check-input" 
+                       type="checkbox" 
+                       id="inStock" 
+                       [(ngModel)]="inStockOnly"
+                       (change)="updateFilters()">
+                <label class="form-check-label text-gray" for="inStock">
+                  In stock only
+                </label>
+              </div>
+            </div>
+          
+            <!-- Sort Options -->
+            <div class="mb-4">
+              <label class="form-label text-black fw-semibold mb-2">
+                <i class="bi bi-sort-down text-red me-2"></i>Sort By
+              </label>
+              <select class="form-select shadow-sm" [(ngModel)]="sortBy" (change)="updateFilters()">
+                <option value="">Default</option>
+                <option value="price_asc">Price: Low to High</option>
+                <option value="price_desc">Price: High to Low</option>
+                <option value="name_asc">Name: A to Z</option>
+                <option value="name_desc">Name: Z to A</option>
+                <option value="newest">Newest First</option>
+              </select>
+            </div>
+          
+            <!-- Clear Filters -->
+            <div class="d-grid">
+              <button class="btn btn-outline-danger shadow-sm" (click)="clearFilters()">
+                <i class="bi bi-x-circle me-2"></i> Clear All
               </button>
             </div>
-          </div>
-          
-          <!-- Category Filter -->
-          <div class="mb-4">
-            <label class="form-label text-black fw-medium">Category</label>
-            <select class="form-select" [(ngModel)]="selectedCategory" (change)="updateFilters()">
-              <option value="">All Categories</option>
-              <option *ngFor="let category of categories" [value]="category.id">
-                {{ category.name }}
-              </option>
-            </select>
-          </div>
-          
-          <!-- Price Range -->
-          <div class="mb-4">
-            <label class="form-label text-black fw-medium">Price Range</label>
-            <div class="row g-2">
-              <div class="col">
-                <input type="number" 
-                       class="form-control" 
-                       placeholder="Min" 
-                       [(ngModel)]="minPrice"
-                       (change)="updateFilters()">
-              </div>
-              <div class="col">
-                <input type="number" 
-                       class="form-control" 
-                       placeholder="Max" 
-                       [(ngModel)]="maxPrice"
-                       (change)="updateFilters()">
-              </div>
-            </div>
-          </div>
-          
-          <!-- Stock Filter -->
-          <div class="mb-4">
-            <label class="form-label text-black fw-medium">Stock Status</label>
-            <div class="form-check">
-              <input class="form-check-input" 
-                     type="checkbox" 
-                     id="inStock" 
-                     [(ngModel)]="inStockOnly"
-                     (change)="updateFilters()">
-              <label class="form-check-label text-gray" for="inStock">
-                Show in-stock only
-              </label>
-            </div>
-          </div>
-          
-          <!-- Sort Options -->
-          <div class="mb-4">
-            <label class="form-label text-black fw-medium">Sort By</label>
-            <select class="form-select" [(ngModel)]="sortBy" (change)="updateFilters()">
-              <option value="">Default</option>
-              <option value="price_asc">Price: Low to High</option>
-              <option value="price_desc">Price: High to Low</option>
-              <option value="name_asc">Name: A to Z</option>
-              <option value="name_desc">Name: Z to A</option>
-              <option value="newest">Newest First</option>
-            </select>
-          </div>
-          
-          <!-- Clear Filters -->
-          <div class="d-grid">
-            <button class="btn btn-outline-red" (click)="clearFilters()">
-              <i class="bi bi-x-circle me-2"></i> Clear All Filters
-            </button>
           </div>
         </div>
       </div>
       
       <!-- Categories List -->
       <div class="card border-0 shadow-sm">
-        <div class="card-body">
-          <h5 class="card-title text-black mb-3">
-            <i class="bi bi-tags text-red me-2"></i> Categories
-          </h5>
+        <div class="card-body p-4">
+          <div class="d-flex align-items-center mb-3">
+            <i class="bi bi-collection text-red fs-5 me-2"></i>
+            <h5 class="card-title text-black mb-0 fw-bold">Categories</h5>
+          </div>
           <div class="list-group list-group-flush">
-            <a class="list-group-item list-group-item-action border-0 py-2" 
+            <a class="list-group-item list-group-item-action border-0 py-3 px-0 d-flex justify-content-between align-items-center" 
                [class.active]="!selectedCategory"
-               (click)="selectCategory(''); updateFilters()">
-              All Products
-              <span class="badge bg-gray float-end">{{ allProducts.length }}</span>
+               (click)="selectCategory(''); updateFilters()"
+               style="cursor: pointer;">
+              <span><i class="bi bi-grid me-2"></i>All Products</span>
+              <span class="badge bg-secondary rounded-pill">{{ allProducts.length }}</span>
             </a>
             <a *ngFor="let category of categories" 
-               class="list-group-item list-group-item-action border-0 py-2"
+               class="list-group-item list-group-item-action border-0 py-3 px-0 d-flex justify-content-between align-items-center"
                [class.active]="selectedCategory === category.id.toString()"
-               (click)="selectCategory(category.id); updateFilters()">
-              {{ category.name }}
-              <span class="badge bg-gray float-end">{{ getCategoryCount(category.id) }}</span>
+               (click)="selectCategory(category.id); updateFilters()"
+               style="cursor: pointer;">
+              <span>{{ category.name }}</span>
+              <span class="badge bg-secondary rounded-pill">{{ getCategoryCount(category.id) }}</span>
             </a>
           </div>
         </div>
@@ -180,7 +201,7 @@
       </div>
       
       <!-- Products Grid View -->
-      <div *ngIf="!isLoading && products.length > 0 && viewMode === 'grid'" class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+      <div *ngIf="!isLoading && products.length > 0 && viewMode === 'grid'" class="row row-cols-2 row-cols-md-3 row-cols-lg-3 g-3 g-md-4">
         <div class="col" *ngFor="let product of products">
           <div class="card product-card border-0 shadow-sm h-100">
             <!-- Product Image -->
@@ -207,8 +228,8 @@
                 </span>
               </div>
               
-              <!-- Stock badges -->
-              <div class="product-badges position-absolute top-0 end-0 p-2">
+              <!-- Stock badges - Hidden on mobile -->
+              <div class="product-badges position-absolute top-0 end-0 p-2 d-none d-md-block">
                 <span *ngIf="product.stock_quantity === 0" class="badge bg-danger">Out of Stock</span>
                 <span *ngIf="product.stock_quantity < 10 && product.stock_quantity > 0" 
                       class="badge bg-warning text-dark">Low Stock</span>
@@ -236,7 +257,7 @@
                       ${{ product.price | number:'1.2-2' }}
                     </span>
                   </div>
-                  <span class="text-gray small">
+                  <span class="text-gray small d-none d-md-inline">
                     <i class="bi bi-box"></i> {{ product.stock_quantity }} in stock
                   </span>
                 </div>
@@ -250,16 +271,19 @@
                 </div>
                 
                 <!-- Actions -->
-                <div class="d-flex gap-2">
+                <div class="d-flex gap-2 action-buttons">
                   <button class="btn btn-red flex-grow-1" 
                           (click)="addToCart(product)"
-                          [disabled]="product.stock_quantity === 0">
-                    <i class="bi bi-cart-plus"></i> Add to Cart
+                          [disabled]="product.stock_quantity === 0"
+                          title="Add to Cart">
+                    <i class="bi bi-cart-plus"></i>
+                    <span class="d-none d-md-inline ms-1">Add to Cart</span>
                   </button>
                   <button class="btn btn-outline-red" 
                           [routerLink]="['/products', product.id]"
                           title="View Details">
                     <i class="bi bi-eye"></i>
+                    <span class="d-none d-md-inline ms-1"></span>
                   </button>
                 </div>
               </div>
@@ -288,8 +312,8 @@
                   </span>
                 </div>
                 
-                <!-- Stock badges -->
-                <div class="product-badges position-absolute top-0 end-0 p-2">
+                <!-- Stock badges - Hidden on mobile -->
+                <div class="product-badges position-absolute top-0 end-0 p-2 d-none d-md-block">
                   <span *ngIf="product.stock_quantity === 0" class="badge bg-danger">Out of Stock</span>
                   <span *ngIf="product.stock_quantity < 10 && product.stock_quantity > 0" 
                         class="badge bg-warning text-dark">Low Stock</span>
@@ -312,23 +336,27 @@
                 
                 <div class="mt-auto d-flex justify-content-between align-items-center">
                   <div>
-                    <span class="text-gray small me-3">
+                    <span class="text-gray small me-3 d-none d-md-inline">
                       <i class="bi bi-box"></i> {{ product.stock_quantity }} in stock
                     </span>
-                    <span class="text-gray small">
+                    <span class="text-gray small d-none d-md-inline">
                       <i class="bi bi-calendar"></i> {{ product.created_at | date:'mediumDate' }}
                     </span>
                   </div>
                   
-                  <div class="d-flex gap-2">
+                  <div class="d-flex gap-2 action-buttons">
                     <button class="btn btn-red" 
                             (click)="addToCart(product)"
-                            [disabled]="product.stock_quantity === 0">
-                      <i class="bi bi-cart-plus me-2"></i> Add to Cart
+                            [disabled]="product.stock_quantity === 0"
+                            title="Add to Cart">
+                      <i class="bi bi-cart-plus"></i>
+                      <span class="d-none d-md-inline ms-2">Add to Cart</span>
                     </button>
                     <button class="btn btn-outline-red" 
-                            [routerLink]="['/products', product.id]">
-                      View Details
+                            [routerLink]="['/products', product.id]"
+                            title="View Details">
+                      <i class="bi bi-eye"></i>
+                      <span class="d-none d-md-inline ms-2">View Details</span>
                     </button>
                   </div>
                 </div>

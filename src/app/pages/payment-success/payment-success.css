@@ -1,0 +1,85 @@
+.success-icon i,
+.error-icon i,
+.warning-icon i {
+  animation: scaleIn 0.5s ease-out;
+}
+
+@keyframes scaleIn {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.progress-bar {
+  transition: width 0.3s ease;
+}
+
+.card {
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+}
+
+.btn {
+  transition: all 0.3s ease;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
+}
+
+/* Red theme colors */
+.text-red {
+  color: #e63946;
+}
+
+.bg-red {
+  background-color: #e63946;
+}
+
+.btn-red {
+  background-color: #e63946;
+  border-color: #e63946;
+  color: white;
+}
+
+.btn-red:hover {
+  background-color: #d62839;
+  border-color: #d62839;
+  color: white;
+}
+
+.btn-outline-red {
+  border-color: #e63946;
+  color: #e63946;
+}
+
+.btn-outline-red:hover {
+  background-color: #e63946;
+  border-color: #e63946;
+  color: white;
+}
+
+.text-black {
+  color: #000000;
+}
+
+.text-gray {
+  color: #495057;
+}
+
+.bg-light-gray {
+  background-color: #f8f9fa;
+}

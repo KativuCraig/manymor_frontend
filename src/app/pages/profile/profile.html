@@ -24,18 +24,28 @@
           <div class="profile-avatar mb-3">
             <i class="bi bi-person-circle"></i>
           </div>
-          <h4 class="mb-1">{{ profile.first_name }} {{ profile.last_name }}</h4>
-          <p class="text-muted mb-3">{{ profile.email }}</p>
+          <h4 class="mb-1">{{ profile.email }}</h4>
           <span class="badge bg-danger mb-3">{{ profile.role }}</span>
           
           <div class="profile-info mt-4 text-start">
             <div class="mb-3">
-              <label class="text-muted small">Phone Number</label>
-              <p class="mb-0">{{ profile.phone_number || 'Not provided' }}</p>
+              <label class="text-muted small">Email</label>
+              <p class="mb-0">{{ profile.email }}</p>
             </div>
             <div class="mb-3">
-              <label class="text-muted small">Member Since</label>
-              <p class="mb-0">{{ formatDate(profile.date_joined) }}</p>
+              <label class="text-muted small">Phone Number</label>
+              <p class="mb-0">{{ profile.phone || 'Not provided' }}</p>
+            </div>
+            <div class="mb-3">
+              <label class="text-muted small">Two-Factor Authentication</label>
+              <p class="mb-0">
+                <span *ngIf="profile.two_factor_enabled" class="badge bg-success">
+                  <i class="bi bi-shield-check me-1"></i>Enabled
+                </span>
+                <span *ngIf="!profile.two_factor_enabled" class="badge bg-secondary">
+                  <i class="bi bi-shield-x me-1"></i>Disabled
+                </span>
+              </p>
             </div>
           </div>
           
@@ -43,6 +53,11 @@
             <i class="bi bi-pencil me-2"></i>
             Edit Profile
           </button>
+
+          <a routerLink="/profile/two-factor" class="btn btn-outline-secondary w-100 mt-2">
+            <i class="bi bi-shield-lock me-2"></i>
+            Manage 2FA
+          </a>
         </div>
       </div>
     </div>
@@ -112,40 +127,15 @@
       <div class="modal-body">
         <form>
           <div class="mb-3">
-            <label class="form-label">Email</label>
-            <input 
-              type="email" 
-              class="form-control" 
-              [(ngModel)]="editProfileForm.email"
-              name="email"
-              disabled>
-            <small class="text-muted">Email cannot be changed</small>
-          </div>
-          <div class="mb-3">
-            <label class="form-label">First Name *</label>
-            <input 
-              type="text" 
-              class="form-control" 
-              [(ngModel)]="editProfileForm.first_name"
-              name="first_name"
-              required>
-          </div>
-          <div class="mb-3">
-            <label class="form-label">Last Name *</label>
-            <input 
-              type="text" 
-              class="form-control" 
-              [(ngModel)]="editProfileForm.last_name"
-              name="last_name"
-              required>
-          </div>
-          <div class="mb-3">
-            <label class="form-label">Phone Number</label>
+            <label class="form-label">Phone Number *</label>
             <input 
               type="tel" 
               class="form-control" 
-              [(ngModel)]="editProfileForm.phone_number"
-              name="phone_number">
+              [(ngModel)]="editProfileForm.phone"
+              name="phone"
+              placeholder="Enter phone number"
+              required>
+            <small class="text-muted">Update your phone number</small>
           </div>
         </form>
       </div>

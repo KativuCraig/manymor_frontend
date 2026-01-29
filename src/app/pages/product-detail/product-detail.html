@@ -117,8 +117,6 @@
         <!-- Category -->
         <div class="mb-2">
           <a href="#" class="text-red text-decoration-none">{{ product.category_name }}</a>
-          <span *ngIf="product.is_active" class="badge bg-success ms-2">Active</span>
-          <span *ngIf="!product.is_active" class="badge bg-danger ms-2">Inactive</span>
           <span *ngIf="product.has_promotion && product.active_promotion" 
                 class="badge ms-2"
                 [style.background-color]="product.active_promotion.badge_color">
@@ -216,7 +214,7 @@
             </div>
 
             <!-- Actions -->
-            <div class="d-flex gap-3">
+            <div class="d-flex gap-3 action-buttons">
               <button class="btn btn-red flex-grow-1 py-3" 
                       (click)="addToCart()"
                       [disabled]="product.stock_quantity === 0">
@@ -253,7 +251,7 @@
               </div>
             </div>
           </div>
-          <div class="col-md-6">
+          <div class="col-md-6 d-none d-md-block">
             <div class="card border-0 bg-light-gray">
               <div class="card-body">
                 <h6 class="card-subtitle text-gray mb-1">SKU</h6>
@@ -269,7 +267,7 @@
               </div>
             </div>
           </div>
-          <div class="col-md-6">
+          <div class="col-md-6 d-none d-md-block">
             <div class="card border-0 bg-light-gray">
               <div class="card-body">
                 <h6 class="card-subtitle text-gray mb-1">Status</h6>

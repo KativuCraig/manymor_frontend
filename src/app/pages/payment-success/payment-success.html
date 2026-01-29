@@ -1,0 +1,147 @@
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      
+      <!-- Checking Payment Status -->
+      <div *ngIf="isChecking" class="text-center">
+        <div class="card border-0 shadow-sm">
+          <div class="card-body p-5">
+            <div class="spinner-border text-red mb-4" role="status" style="width: 4rem; height: 4rem;">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+            <h2 class="text-black mb-3">{{ getStatusIcon() }} {{ getStatusText() }}</h2>
+            <p class="text-gray mb-4">Please wait while we verify your payment...</p>
+            <p class="text-muted small">
+              <i class="bi bi-info-circle me-2"></i>
+              Do not close this window. You will be redirected automatically.
+            </p>
+            <div class="progress mt-4" style="height: 6px;">
+              <div class="progress-bar bg-red progress-bar-striped progress-bar-animated" 
+                   role="progressbar" 
+                   [style.width.%]="(checkAttempts / maxAttempts) * 100">
+              </div>
+            </div>
+            <p class="text-muted small mt-2">Attempt {{ checkAttempts }} of {{ maxAttempts }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Payment Successful -->
+      <div *ngIf="!isChecking && paymentStatus === 'PAID'" class="text-center">
+        <div class="card border-0 shadow-sm">
+          <div class="card-body p-5">
+            <div class="success-icon mb-4">
+              <i class="bi bi-check-circle-fill text-success" style="font-size: 6rem;"></i>
+            </div>
+            <h1 class="text-success mb-3">✅ Payment Successful!</h1>
+            <p class="text-gray mb-4 lead">Your payment has been confirmed.</p>
+            <p class="text-muted mb-4">
+              Order #{{ orderId }} has been successfully placed and paid.
+              <br>
+              Redirecting to order confirmation...
+            </p>
+            <div class="spinner-border text-red" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Payment Failed -->
+      <div *ngIf="!isChecking && (paymentStatus === 'FAILED' || paymentStatus === 'CANCELLED')" class="text-center">
+        <div class="card border-0 shadow-sm">
+          <div class="card-body p-5">
+            <div class="error-icon mb-4">
+              <i class="bi bi-x-circle-fill text-danger" style="font-size: 6rem;"></i>
+            </div>
+            <h1 class="text-danger mb-3">{{ getStatusIcon() }} {{ getStatusText() }}</h1>
+            <p class="text-gray mb-4 lead">{{ errorMessage }}</p>
+            <p class="text-muted mb-4">
+              Your order has been created but payment was not completed.
+              <br>
+              Order #{{ orderId }} - Payment Status: {{ paymentStatus }}
+            </p>
+            <div class="d-flex gap-3 justify-content-center">
+              <button (click)="retryPayment()" class="btn btn-red px-4">
+                <i class="bi bi-arrow-counterclockwise me-2"></i>
+                Try Again
+              </button>
+              <button (click)="viewOrders()" class="btn btn-outline-red px-4">
+                <i class="bi bi-list-ul me-2"></i>
+                View Orders
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Payment Status Unknown -->
+      <div *ngIf="!isChecking && paymentStatus === 'UNKNOWN'" class="text-center">
+        <div class="card border-0 shadow-sm">
+          <div class="card-body p-5">
+            <div class="warning-icon mb-4">
+              <i class="bi bi-question-circle-fill text-warning" style="font-size: 6rem;"></i>
+            </div>
+            <h1 class="text-warning mb-3">❓ Payment Status Unknown</h1>
+            <p class="text-gray mb-4 lead">{{ errorMessage }}</p>
+            <p class="text-muted mb-4">
+              We're having trouble verifying your payment.
+              <br>
+              Please check your order history or contact customer support.
+            </p>
+            <div class="d-flex gap-3 justify-content-center">
+              <button (click)="checkPaymentStatus()" class="btn btn-red px-4">
+                <i class="bi bi-arrow-clockwise me-2"></i>
+                Check Again
+              </button>
+              <button (click)="viewOrders()" class="btn btn-outline-red px-4">
+                <i class="bi bi-list-ul me-2"></i>
+                View Orders
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Error Message -->
+      <div *ngIf="errorMessage && !orderId" class="text-center">
+        <div class="alert alert-danger">
+          <h4 class="alert-heading">
+            <i class="bi bi-exclamation-triangle me-2"></i>
+            Error
+          </h4>
+          <p>{{ errorMessage }}</p>
+          <hr>
+          <a routerLink="/cart" class="btn btn-outline-danger">
+            <i class="bi bi-arrow-left me-2"></i>
+            Return to Cart
+          </a>
+        </div>
+      </div>
+
+      <!-- Help Section -->
+      <div class="card border-0 bg-light mt-4">
+        <div class="card-body text-center">
+          <h5 class="text-black mb-3">
+            <i class="bi bi-question-circle me-2"></i>
+            Need Help?
+          </h5>
+          <p class="text-gray small mb-3">
+            If you're experiencing issues with your payment, please contact our support team.
+          </p>
+          <div class="d-flex gap-3 justify-content-center flex-wrap">
+            <a href="mailto:support@manymor.com" class="text-red text-decoration-none">
+              <i class="bi bi-envelope me-1"></i>
+              support@manymor.com
+            </a>
+            <a href="tel:+263771234567" class="text-red text-decoration-none">
+              <i class="bi bi-telephone me-1"></i>
+              +263 77 123 4567
+            </a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

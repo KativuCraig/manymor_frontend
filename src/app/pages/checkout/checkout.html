@@ -8,7 +8,7 @@
           <ul class="checkout-steps list-unstyled d-flex mb-0">
             <li class="checkout-step" [class.active]="currentStep === 1" [class.completed]="currentStep > 1">
               <span class="step-number">1</span>
-              <span class="step-label">Shipping</span>
+              <span class="step-label">Delivery</span>
             </li>
             <li class="checkout-step" [class.active]="currentStep === 2" [class.completed]="currentStep > 2">
               <span class="step-number">2</span>
@@ -59,15 +59,15 @@
     <!-- Left Column: Checkout Steps -->
     <div class="col-lg-8">
       
-      <!-- Step 1: Shipping Address -->
+      <!-- Step 1: Delivery Address -->
       <div *ngIf="currentStep === 1" class="checkout-step-content">
         <div class="card border-0 shadow-sm mb-4">
           <div class="card-body">
             <h3 class="card-title text-black mb-4">
-              <i class="bi bi-truck text-red me-2"></i> Shipping Information
+              <i class="bi bi-truck text-red me-2"></i> Delivery Information
             </h3>
             
-            <form [formGroup]="shippingForm" (ngSubmit)="proceedToPayment()">
+            <form [formGroup]="deliveryForm" (ngSubmit)="proceedToPayment()">
               <!-- Full Name -->
               <div class="row mb-3">
                 <div class="col-md-6">
@@ -76,8 +76,8 @@
                          class="form-control" 
                          id="firstName"
                          formControlName="firstName"
-                         [class.is-invalid]="shippingForm.get('firstName')?.invalid && shippingForm.get('firstName')?.touched">
-                  <div class="invalid-feedback" *ngIf="shippingForm.get('firstName')?.errors?.['required']">
+                         [class.is-invalid]="deliveryForm.get('firstName')?.invalid && deliveryForm.get('firstName')?.touched">
+                  <div class="invalid-feedback" *ngIf="deliveryForm.get('firstName')?.errors?.['required']">
                     First name is required
                   </div>
                 </div>
@@ -87,8 +87,8 @@
                          class="form-control" 
                          id="lastName"
                          formControlName="lastName"
-                         [class.is-invalid]="shippingForm.get('lastName')?.invalid && shippingForm.get('lastName')?.touched">
-                  <div class="invalid-feedback" *ngIf="shippingForm.get('lastName')?.errors?.['required']">
+                         [class.is-invalid]="deliveryForm.get('lastName')?.invalid && deliveryForm.get('lastName')?.touched">
+                  <div class="invalid-feedback" *ngIf="deliveryForm.get('lastName')?.errors?.['required']">
                     Last name is required
                   </div>
                 </div>
@@ -102,8 +102,8 @@
                        id="address"
                        formControlName="address"
                        placeholder="Street address"
-                       [class.is-invalid]="shippingForm.get('address')?.invalid && shippingForm.get('address')?.touched">
-                <div class="invalid-feedback" *ngIf="shippingForm.get('address')?.errors?.['required']">
+                       [class.is-invalid]="deliveryForm.get('address')?.invalid && deliveryForm.get('address')?.touched">
+                <div class="invalid-feedback" *ngIf="deliveryForm.get('address')?.errors?.['required']">
                   Address is required
                 </div>
               </div>
@@ -116,8 +116,8 @@
                          class="form-control" 
                          id="city"
                          formControlName="city"
-                         [class.is-invalid]="shippingForm.get('city')?.invalid && shippingForm.get('city')?.touched">
-                  <div class="invalid-feedback" *ngIf="shippingForm.get('city')?.errors?.['required']">
+                         [class.is-invalid]="deliveryForm.get('city')?.invalid && deliveryForm.get('city')?.touched">
+                  <div class="invalid-feedback" *ngIf="deliveryForm.get('city')?.errors?.['required']">
                     City is required
                   </div>
                 </div>
@@ -127,8 +127,8 @@
                          class="form-control" 
                          id="zipCode"
                          formControlName="zipCode"
-                         [class.is-invalid]="shippingForm.get('zipCode')?.invalid && shippingForm.get('zipCode')?.touched">
-                  <div class="invalid-feedback" *ngIf="shippingForm.get('zipCode')?.errors?.['required']">
+                         [class.is-invalid]="deliveryForm.get('zipCode')?.invalid && deliveryForm.get('zipCode')?.touched">
+                  <div class="invalid-feedback" *ngIf="deliveryForm.get('zipCode')?.errors?.['required']">
                     Zip code is required
                   </div>
                 </div>
@@ -143,9 +143,12 @@
                          id="phone"
                          formControlName="phone"
                          placeholder="0771234567"
-                         [class.is-invalid]="shippingForm.get('phone')?.invalid && shippingForm.get('phone')?.touched">
-                  <div class="invalid-feedback" *ngIf="shippingForm.get('phone')?.errors?.['required']">
+                         [class.is-invalid]="deliveryForm.get('phone')?.invalid && deliveryForm.get('phone')?.touched">
+                  <div class="invalid-feedback" *ngIf="deliveryForm.get('phone')?.errors?.['required']">
                     Phone number is required
+                  </div>
+                  <div class="invalid-feedback" *ngIf="deliveryForm.get('phone')?.errors?.['pattern']">
+                    Please enter a valid Zimbabwe phone number
                   </div>
                 </div>
                 <div class="col-md-6">
@@ -154,38 +157,13 @@
                          class="form-control" 
                          id="email"
                          formControlName="email"
-                         [class.is-invalid]="shippingForm.get('email')?.invalid && shippingForm.get('email')?.touched">
-                  <div class="invalid-feedback" *ngIf="shippingForm.get('email')?.errors?.['required']">
+                         [class.is-invalid]="deliveryForm.get('email')?.invalid && deliveryForm.get('email')?.touched">
+                  <div class="invalid-feedback" *ngIf="deliveryForm.get('email')?.errors?.['required']">
                     Email is required
                   </div>
-                  <div class="invalid-feedback" *ngIf="shippingForm.get('email')?.errors?.['email']">
+                  <div class="invalid-feedback" *ngIf="deliveryForm.get('email')?.errors?.['email']">
                     Please enter a valid email
                   </div>
-                </div>
-              </div>
-              
-              <!-- Shipping Method -->
-              <div class="mb-4">
-                <h6 class="text-black mb-3">Shipping Method</h6>
-                <div class="form-check mb-2">
-                  <input class="form-check-input" 
-                         type="radio" 
-                         id="standardShipping"
-                         formControlName="shippingMethod"
-                         value="standard">
-                  <label class="form-check-label text-gray" for="standardShipping">
-                    Standard Shipping (3-5 business days) - FREE
-                  </label>
-                </div>
-                <div class="form-check">
-                  <input class="form-check-input" 
-                         type="radio" 
-                         id="expressShipping"
-                         formControlName="shippingMethod"
-                         value="express">
-                  <label class="form-check-label text-gray" for="expressShipping">
-                    Express Shipping (1-2 business days) - $10.00
-                  </label>
                 </div>
               </div>
               
@@ -196,7 +174,7 @@
                 </a>
                 <button type="submit" 
                         class="btn btn-red"
-                        [disabled]="shippingForm.invalid || isProcessing">
+                        [disabled]="deliveryForm.invalid || isProcessing">
                   Continue to Payment <i class="bi bi-arrow-right ms-2"></i>
                 </button>
               </div>
@@ -217,104 +195,26 @@
               <!-- Payment Method -->
               <div class="mb-4">
                 <h6 class="text-black mb-3">Payment Method</h6>
+                <div class="alert alert-info">
+                  <i class="bi bi-info-circle me-2"></i>
+                  <strong>Secure Payment via ClicknPay</strong><br>
+                  You will be redirected to ClicknPay's secure payment gateway to complete your payment using mobile money.
+                </div>
                 <div class="row g-3">
-                  <div class="col-md-4">
-                    <div class="payment-option">
-                      <input type="radio" 
-                             id="cardPayment"
-                             formControlName="paymentMethod"
-                             value="card"
-                             class="btn-check">
-                      <label for="cardPayment" class="btn btn-outline-red w-100">
-                        <i class="bi bi-credit-card-2-front me-2"></i> Card
-                      </label>
-                    </div>
-                  </div>
-                  <div class="col-md-4">
-                    <div class="payment-option">
-                      <input type="radio" 
-                             id="bankTransfer"
-                             formControlName="paymentMethod"
-                             value="bank"
-                             class="btn-check">
-                      <label for="bankTransfer" class="btn btn-outline-red w-100">
-                        <i class="bi bi-bank me-2"></i> Bank Transfer
-                      </label>
-                    </div>
-                  </div>
-                  <div class="col-md-4">
-                    <div class="payment-option">
-                      <input type="radio" 
-                             id="mobileMoney"
-                             formControlName="paymentMethod"
-                             value="mobile"
-                             class="btn-check">
-                      <label for="mobileMoney" class="btn btn-outline-red w-100">
-                        <i class="bi bi-phone me-2"></i> Mobile Money
-                      </label>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              
-              <!-- Card Details (shown when card is selected) -->
-              <div *ngIf="paymentForm.get('paymentMethod')?.value === 'card'" class="mb-4">
-                <div class="row mb-3">
                   <div class="col-md-12">
-                    <label for="cardNumber" class="form-label text-black">Card Number</label>
-                    <input type="text" 
-                           class="form-control" 
-                           id="cardNumber"
-                           formControlName="cardNumber"
-                           placeholder="1234 5678 9012 3456"
-                           maxlength="19">
+                    <div class="payment-option selected">
+                      <div class="card border-red">
+                        <div class="card-body text-center">
+                          <i class="bi bi-phone-fill text-red fs-1 mb-3"></i>
+                          <h5 class="text-black">Mobile Money (ClicknPay)</h5>
+                          <p class="text-gray small mb-0">
+                            Secure payment via EcoCash, OneMoney, and other mobile wallets
+                          </p>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
-                <div class="row mb-3">
-                  <div class="col-md-6">
-                    <label for="expiryDate" class="form-label text-black">Expiry Date</label>
-                    <input type="text" 
-                           class="form-control" 
-                           id="expiryDate"
-                           formControlName="expiryDate"
-                           placeholder="MM/YY"
-                           maxlength="5">
-                  </div>
-                  <div class="col-md-6">
-                    <label for="cvv" class="form-label text-black">CVV</label>
-                    <input type="text" 
-                           class="form-control" 
-                           id="cvv"
-                           formControlName="cvv"
-                           placeholder="123"
-                           maxlength="3">
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col-md-12">
-                    <label for="cardName" class="form-label text-black">Name on Card</label>
-                    <input type="text" 
-                           class="form-control" 
-                           id="cardName"
-                           formControlName="cardName">
-                  </div>
-                </div>
-              </div>
-              
-              <!-- Payment Instructions for other methods -->
-              <div *ngIf="paymentForm.get('paymentMethod')?.value === 'bank'" class="alert alert-info mb-4">
-                <h6 class="alert-heading">Bank Transfer Instructions</h6>
-                <p class="mb-1">Account Name: MANYMOR STORES</p>
-                <p class="mb-1">Account Number: 1234567890</p>
-                <p class="mb-1">Bank: CBZ Bank</p>
-                <p class="mb-0">Branch: Harare Main Branch</p>
-              </div>
-              
-              <div *ngIf="paymentForm.get('paymentMethod')?.value === 'mobile'" class="alert alert-info mb-4">
-                <h6 class="alert-heading">Mobile Money Instructions</h6>
-                <p class="mb-1">Send payment to: 0771 234 567</p>
-                <p class="mb-1">Provider: EcoCash</p>
-                <p class="mb-0">Reference: Your order number</p>
               </div>
               
               <!-- Navigation Buttons -->
@@ -322,7 +222,7 @@
                 <button type="button" 
                         class="btn btn-outline-red"
                         (click)="goToStep(1)">
-                  <i class="bi bi-arrow-left me-2"></i> Back to Shipping
+                  <i class="bi bi-arrow-left me-2"></i> Back to Delivery
                 </button>
                 <button type="submit" 
                         class="btn btn-red"
@@ -345,22 +245,18 @@
             
             <!-- Order Summary -->
             <div class="order-review">
-              <!-- Shipping Information -->
+              <!-- Delivery Information -->
               <div class="mb-4">
-                <h6 class="text-black mb-3">Shipping Information</h6>
+                <h6 class="text-black mb-3">Delivery Information</h6>
                 <div class="card bg-light-gray border-0">
                   <div class="card-body">
                     <p class="mb-1">
-                      <strong>{{ shippingInfo.firstName }} {{ shippingInfo.lastName }}</strong>
+                      <strong>{{ deliveryInfo.firstName }} {{ deliveryInfo.lastName }}</strong>
                     </p>
-                    <p class="mb-1">{{ shippingInfo.address }}</p>
-                    <p class="mb-1">{{ shippingInfo.city }}, {{ shippingInfo.zipCode }}</p>
-                    <p class="mb-1">Phone: {{ shippingInfo.phone }}</p>
-                    <p class="mb-0">Email: {{ shippingInfo.email }}</p>
-                    <p class="mb-0 mt-2">
-                      <strong>Shipping Method:</strong> 
-                      {{ shippingInfo.shippingMethod === 'express' ? 'Express (1-2 days)' : 'Standard (3-5 days)' }}
-                    </p>
+                    <p class="mb-1">{{ deliveryInfo.address }}</p>
+                    <p class="mb-1">{{ deliveryInfo.city }}, {{ deliveryInfo.zipCode }}</p>
+                    <p class="mb-1">Phone: {{ deliveryInfo.phone }}</p>
+                    <p class="mb-0">Email: {{ deliveryInfo.email }}</p>
                   </div>
                 </div>
               </div>
@@ -372,10 +268,11 @@
                   <div class="card-body">
                     <p class="mb-1">
                       <strong>Payment Method:</strong> 
-                      {{ getPaymentMethodLabel(paymentInfo.paymentMethod) }}
+                      Mobile Money via ClicknPay
                     </p>
-                    <p *ngIf="paymentInfo.paymentMethod === 'card'" class="mb-0">
-                      Card ending in: •••• {{ paymentInfo.cardNumber?.slice(-4) }}
+                    <p class="mb-0 text-muted small">
+                      <i class="bi bi-shield-check me-1"></i>
+                      Secure payment processing by ClicknPay
                     </p>
                   </div>
                 </div>
@@ -411,16 +308,6 @@
                       <span class="text-gray">Subtotal</span>
                       <span class="text-black fw-medium">${{ getSubtotal().toFixed(2) }}</span>
                     </div>
-                    <div class="d-flex justify-content-between mb-2">
-                      <span class="text-gray">Shipping</span>
-                      <span class="text-black fw-medium">
-                        {{ shippingInfo.shippingMethod === 'express' ? '$10.00' : 'FREE' }}
-                      </span>
-                    </div>
-                    <div class="d-flex justify-content-between mb-2">
-                      <span class="text-gray">Tax (15%)</span>
-                      <span class="text-black fw-medium">${{ getTax().toFixed(2) }}</span>
-                    </div>
                     <hr>
                     <div class="d-flex justify-content-between">
                       <span class="text-black fw-bold">Total</span>
@@ -438,8 +325,8 @@
                        [(ngModel)]="agreeTerms"
                        [class.is-invalid]="!agreeTerms && termsTouched">
                 <label class="form-check-label text-gray" for="agreeTerms">
-                  I agree to the <a href="#" class="text-red">Terms & Conditions</a> and 
-                  <a href="#" class="text-red">Privacy Policy</a>
+                  I agree to the <a routerLink="/terms" target="_blank" class="text-red text-decoration-none">Terms & Conditions</a> and 
+                  <a routerLink="/privacy" target="_blank" class="text-red text-decoration-none">Privacy Policy</a>
                 </label>
                 <div class="invalid-feedback" *ngIf="!agreeTerms && termsTouched">
                   You must agree to the terms to proceed
@@ -515,16 +402,6 @@
               <span class="text-gray">Subtotal</span>
               <span class="text-black fw-medium">${{ getSubtotal().toFixed(2) }}</span>
             </div>
-            <div class="d-flex justify-content-between mb-2">
-              <span class="text-gray">Shipping</span>
-              <span class="text-black fw-medium">
-                {{ (shippingInfo.shippingMethod === 'express' && currentStep >= 1) ? '$10.00' : 'FREE' }}
-              </span>
-            </div>
-            <div class="d-flex justify-content-between mb-2">
-              <span class="text-gray">Tax</span>
-              <span class="text-black fw-medium">${{ getTax().toFixed(2) }}</span>
-            </div>
             <hr>
             <div class="d-flex justify-content-between">
               <span class="text-black fw-bold">Total</span>
@@ -542,13 +419,6 @@
               <i class="bi bi-lock text-success me-2"></i>
               <small class="text-gray">Your payment is secure</small>
             </div>
-          </div>
-          
-          <!-- Help Info -->
-          <div class="mt-3">
-            <a href="#" class="text-red small text-decoration-none">
-              <i class="bi bi-question-circle me-1"></i> Need help?
-            </a>
           </div>
         </div>
       </div>

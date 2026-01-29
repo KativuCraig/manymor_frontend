@@ -14,9 +14,6 @@
           <a routerLink="/products" class="btn btn-red btn-lg px-4">
             <i class="bi bi-shop me-2"></i> Shop Now
           </a>
-          <a routerLink="/categories" class="btn btn-outline-red btn-lg px-4">
-            <i class="bi bi-tags me-2"></i> Browse Categories
-          </a>
         </div>
       </div>
 
@@ -87,114 +84,10 @@
   </div>
 </section>
 
-<!-- ================= FEATURES ================= -->
-<section class="py-5 bg-light-gray">
-  <div class="container">
-    <div class="row g-4">
-      <div class="col-md-4" *ngFor="let feature of [1,2,3]">
-        <div class="card border-0 shadow-sm h-100 text-center p-4">
-          <div class="feature-icon mb-3">
-            <i
-              class="bi"
-              [ngClass]="{
-                'bi-truck': feature === 1,
-                'bi-shield-check': feature === 2,
-                'bi-headset': feature === 3
-              }"
-            ></i>
-          </div>
-          <h5 class="fw-bold">
-            {{ feature === 1 ? 'Fast Delivery' :
-               feature === 2 ? 'Secure Shopping' : '24/7 Support' }}
-          </h5>
-          <p class="text-muted">
-            {{
-              feature === 1
-                ? 'Quick and reliable delivery across Zimbabwe.'
-                : feature === 2
-                ? 'Safe and encrypted payment processing.'
-                : 'Our team is always ready to help.'
-            }}
-          </p>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ================= CATEGORIES ================= -->
-<section class="py-5">
-  <div class="container">
-    <div class="mb-4">
-      <h2 class="fw-bold">Browse Categories</h2>
-    </div>
-
-    <!-- Loading OR Content -->
-    <ng-container *ngIf="isLoadingCategories; else categoriesContent">
-      <div class="row g-4">
-        <div class="col-md-3 col-sm-6" *ngFor="let i of [1,2,3,4]">
-          <div class="card p-4 text-center loading">
-            <span class="placeholder col-6 mx-auto"></span>
-          </div>
-        </div>
-      </div>
-    </ng-container>
-
-    <ng-template #categoriesContent>
-      <div *ngIf="categories.length > 0; else noCategories" class="row g-4">
-        <div class="col-md-3 col-sm-6" *ngFor="let category of categories | slice:0:8">
-          <div class="card category-card h-100 text-center p-4 border-0 shadow-sm hover-lift">
-            <!-- Category Icon -->
-            <div class="category-icon mb-3">
-              <i 
-                class="bi fs-1 text-red" 
-                [ngClass]="getCategoryIcon(category)"
-              ></i>
-            </div>
-            
-            <!-- Category Name -->
-            <h5 class="fw-bold mb-2">{{ category.name }}</h5>
-            
-            <!-- Category Stats -->
-            <div class="text-muted small mb-3">
-              <div>
-                <i class="bi bi-box me-1"></i>
-                {{ getCategoryProductCount(category) }} products
-              </div>
-              <div *ngIf="category.children?.length">
-                <i class="bi bi-diagram-3 me-1"></i>
-                {{ category.children?.length }} subcategories
-              </div>
-            </div>
-            
-            <!-- Action Button -->
-            <div class="mt-auto">
-              <a
-                [routerLink]="['/products']"
-                [queryParams]="{ category: category.id }"
-                class="btn btn-outline-red btn-sm w-100"
-              >
-                <i class="bi bi-arrow-right me-1"></i> Browse
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <ng-template #noCategories>
-        <div class="text-center py-5">
-          <i class="bi bi-tags display-1 text-muted"></i>
-          <p class="text-muted mt-3">No categories available.</p>
-        </div>
-      </ng-template>
-    </ng-template>
-  </div>
-</section>
-
 <!-- ================= PRODUCTS ================= -->
 <section class="py-5 bg-light-gray">
   <div class="container">
-    <h2 class="fw-bold mb-4">Featured Products</h2>
+    <h2 class="fw-bold mb-4">Popular Products</h2>
 
     <!-- Loading // Content -->
     <ng-container *ngIf="isLoadingProducts; else productsContent">
@@ -205,8 +98,8 @@
     </ng-container>
 
     <ng-template #productsContent>
-      <div *ngIf="products.length > 0; else noProducts" class="row g-4">
-        <div class="col-lg-3 col-md-4 col-sm-6" *ngFor="let product of products">
+      <div *ngIf="products.length > 0; else noProducts" class="row g-3 g-md-4">
+        <div class="col-6 col-md-4 col-lg-3" *ngFor="let product of products">
           <div class="card h-100 shadow-sm product-card">
             <!-- Product Image Section -->
             <div class="product-image position-relative">
@@ -245,8 +138,8 @@
             >
           </ng-template>
               
-              <!-- Stock Badge -->
-              <div class="position-absolute top-0 end-0 m-2">
+              <!-- Stock Badge - Hidden on mobile -->
+              <div class="position-absolute top-0 end-0 m-2 d-none d-md-block">
                 <span 
                   class="badge" 
                   [ngClass]="product.stock_quantity > 0 ? 'bg-success' : 'bg-danger'"
@@ -302,7 +195,7 @@
                     </span>
                   </div>
                   
-                  <span class="text-muted small">
+                  <span class="text-muted small d-none d-md-block">
                     {{ product.stock_quantity }} available
                   </span>
                 </div>
@@ -316,20 +209,24 @@
                 </div>
                 
                 <!-- Action Buttons -->
-                <div class="d-grid gap-2">
+                <div class="d-flex gap-2 action-buttons">
                   <button 
-                    class="btn btn-red"
+                    class="btn btn-red flex-fill"
                     [disabled]="product.stock_quantity === 0"
                     (click)="addToCart(product)"
+                    title="Add to Cart"
                   >
-                    <i class="bi bi-cart-plus me-1"></i> Add to Cart
+                    <i class="bi bi-cart-plus"></i>
+                    <span class="d-none d-md-inline ms-1">Add to Cart</span>
                   </button>
                   
                   <a 
                     [routerLink]="['/products', product.id]"
-                    class="btn btn-outline-red"
+                    class="btn btn-outline-red flex-fill"
+                    title="View Details"
                   >
-                    <i class="bi bi-eye me-1"></i> View Details
+                    <i class="bi bi-eye"></i>
+                    <span class="d-none d-md-inline ms-1">View Details</span>
                   </a>
                 </div>
               </div>
@@ -384,6 +281,41 @@
     <ng-template #noOrders>
       <p class="text-muted">You have no recent orders.</p>
     </ng-template>
+  </div>
+</section>
+
+<!-- ================= FEATURES ================= -->
+<section class="py-5 bg-light-gray">
+  <div class="container">
+    <div class="row g-3 g-md-4">
+      <div class="col-6 col-md-4" *ngFor="let feature of [1,2,3]">
+        <div class="card border-0 shadow-sm h-100 text-center p-4">
+          <div class="feature-icon mb-3">
+            <i
+              class="bi"
+              [ngClass]="{
+                'bi-truck': feature === 1,
+                'bi-shield-check': feature === 2,
+                'bi-headset': feature === 3
+              }"
+            ></i>
+          </div>
+          <h5 class="fw-bold">
+            {{ feature === 1 ? 'Fast Delivery' :
+               feature === 2 ? 'Secure Shopping' : '24/7 Support' }}
+          </h5>
+          <p class="text-muted">
+            {{
+              feature === 1
+                ? 'Quick and reliable delivery across Zimbabwe.'
+                : feature === 2
+                ? 'Safe and encrypted payment processing.'
+                : 'Our team is always ready to help.'
+            }}
+          </p>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 

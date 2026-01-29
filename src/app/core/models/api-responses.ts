@@ -10,3 +10,24 @@ export interface PaginatedResponse<T> {
   previous: string | null;
   results: T[];
 }
+
+// 2FA Models
+export interface TwoFactorSetupResponse {
+  qr_code: string;
+  secret: string;
+  message?: string;
+}
+
+export interface TwoFactorVerifyResponse {
+  message: string;
+  backup_codes: string[];
+}
+
+export interface TwoFactorStatusResponse {
+  is_enabled: boolean;
+  message?: string;
+}
+
+export interface TwoFactorDisableRequest {
+  password: string;
+}

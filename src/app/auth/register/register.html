@@ -11,6 +11,12 @@
 
           <!-- Register Form -->
           <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+            <!-- Error Message -->
+            <div *ngIf="errorMessage" class="alert alert-danger mb-3">
+              <i class="bi bi-exclamation-triangle me-2"></i>
+              {{ errorMessage }}
+            </div>
+
             <div class="row">
               <div class="mb-3">
                 <label for="phone" class="form-label text-black">Phone Number</label>
@@ -99,7 +105,7 @@
                 [class.is-invalid]="registerForm.get('terms')?.invalid && registerForm.get('terms')?.touched"
               >
               <label class="form-check-label text-gray" for="terms">
-                I agree to the <a href="#" class="text-red">Terms & Conditions</a> and <a href="#" class="text-red">Privacy Policy</a>
+                I agree to the <a routerLink="/terms" target="_blank" class="text-red text-decoration-none">Terms & Conditions</a> and <a routerLink="/privacy" target="_blank" class="text-red text-decoration-none">Privacy Policy</a>
               </label>
               <div class="invalid-feedback" *ngIf="registerForm.get('terms')?.invalid && registerForm.get('terms')?.touched">
                 You must accept the terms and conditions.
@@ -118,11 +124,6 @@
                 Creating Account...
               </span>
             </button>
-
-            <!-- Error Message -->
-            <div *ngIf="errorMessage" class="alert alert-danger mt-3">
-              {{ errorMessage }}
-            </div>
 
             <!-- Login Link -->
             <div class="text-center mt-4">

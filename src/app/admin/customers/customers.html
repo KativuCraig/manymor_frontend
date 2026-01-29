@@ -78,7 +78,7 @@
               <td>{{ customer.id }}</td>
               <td>{{ getCustomerName(customer) }}</td>
               <td>{{ customer.email }}</td>
-              <td>{{ customer.phone_number || 'N/A' }}</td>
+              <td>{{ customer.phone || 'N/A' }}</td>
               <td>
                 <span class="badge" [ngClass]="getRoleBadgeClass(customer.role)">
                   {{ customer.role }}
@@ -182,16 +182,8 @@
               <p class="mb-0">{{ detailsCustomer.email }}</p>
             </div>
             <div class="col-md-6 mb-3">
-              <label class="text-muted small">First Name</label>
-              <p class="mb-0">{{ detailsCustomer.first_name || 'N/A' }}</p>
-            </div>
-            <div class="col-md-6 mb-3">
-              <label class="text-muted small">Last Name</label>
-              <p class="mb-0">{{ detailsCustomer.last_name || 'N/A' }}</p>
-            </div>
-            <div class="col-md-6 mb-3">
               <label class="text-muted small">Phone Number</label>
-              <p class="mb-0">{{ detailsCustomer.phone_number || 'N/A' }}</p>
+              <p class="mb-0">{{ detailsCustomer.phone || 'N/A' }}</p>
             </div>
             <div class="col-md-6 mb-3">
               <label class="text-muted small">Role</label>
@@ -202,16 +194,15 @@
               </p>
             </div>
             <div class="col-md-6 mb-3">
-              <label class="text-muted small">Account Status</label>
+              <label class="text-muted small">Two-Factor Authentication</label>
               <p class="mb-0">
-                <span class="badge" [ngClass]="getStatusBadgeClass(detailsCustomer.is_active)">
-                  {{ detailsCustomer.is_active ? 'Active' : 'Inactive' }}
+                <span *ngIf="detailsCustomer.two_factor_enabled" class="badge bg-success">
+                  <i class="bi bi-shield-check me-1"></i>Enabled
+                </span>
+                <span *ngIf="!detailsCustomer.two_factor_enabled" class="badge bg-secondary">
+                  <i class="bi bi-shield-x me-1"></i>Disabled
                 </span>
               </p>
-            </div>
-            <div class="col-md-6 mb-3">
-              <label class="text-muted small">Member Since</label>
-              <p class="mb-0">{{ formatDate(detailsCustomer.date_joined) }}</p>
             </div>
           </div>
         </div>

@@ -155,6 +155,37 @@
     top: 0 !important;
     margin-bottom: 1rem;
   }
+  
+  /* Reduce all button sizes on mobile */
+  .btn {
+    padding: 0.4rem 0.75rem !important;
+    font-size: 0.85rem !important;
+  }
+  
+  .btn-lg {
+    padding: 0.5rem 1rem !important;
+    font-size: 0.9rem !important;
+  }
+  
+  .btn i {
+    font-size: 0.85rem;
+  }
+  
+  /* Specific button adjustments */
+  .card-body .btn.w-100 {
+    padding: 0.6rem 1rem !important;
+    font-size: 0.9rem !important;
+  }
+  
+  /* Form control sizing */
+  .form-control, .form-select {
+    font-size: 0.9rem;
+    padding: 0.5rem 0.75rem;
+  }
+  
+  .form-label {
+    font-size: 0.85rem;
+  }
 }
 
 /* Loading States */

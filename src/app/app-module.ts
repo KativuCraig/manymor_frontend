@@ -22,10 +22,14 @@ import { Products } from './pages/products/products';
 import { ProductDetail } from './pages/product-detail/product-detail';
 import { CartComponent } from './pages/cart/cart';
 import { Checkout } from './pages/checkout/checkout';
+import { PaymentSuccess } from './pages/payment-success/payment-success';
 import { OrderConfirmation } from './pages/order-confirmation/order-confirmation';
 import { Profile } from './pages/profile/profile';
+import { TwoFactor } from './pages/profile/two-factor/two-factor';
 import { About } from './pages/about/about';
 import { Contact } from './pages/contact/contact';
+import { Terms } from './pages/terms/terms';
+import { Privacy } from './pages/privacy/privacy';
 import { Dashboard } from './admin/dashboard/dashboard';
 import { Orders } from './admin/orders/orders';
 import { Categories } from './admin/categories/categories';
@@ -51,10 +55,14 @@ import { Promotions } from './admin/promotions/promotions';
     ProductDetail,
     CartComponent,
     Checkout,
+    PaymentSuccess,
     OrderConfirmation,
     Profile,
+    TwoFactor,
     About,
     Contact,
+    Terms,
+    Privacy,
     Dashboard,
     Orders,
     Categories,

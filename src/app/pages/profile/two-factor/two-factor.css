@@ -1,0 +1,148 @@
+.qr-code-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 250px;
+}
+
+.backup-codes {
+  max-height: 300px;
+  overflow-y: auto;
+  line-height: 1.8;
+}
+
+/* 2FA Code Input Styling */
+input[type="text"]#verificationCode {
+  font-weight: 600;
+}
+
+input[type="text"]#verificationCode:focus {
+  border-color: #dc3545;
+  box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+}
+
+/* Status Badge */
+.text-success {
+  color: #28a745 !important;
+}
+
+/* Modal Backdrop */
+.modal.show {
+  overflow-y: auto;
+}
+
+/* Card Hover Effects */
+.card {
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+}
+
+/* Button Spacing */
+.btn {
+  transition: all 0.2s;
+}
+
+.btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.15);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .qr-code-container img {
+    max-width: 200px !important;
+  }
+  
+  /* Reduce text sizes */
+  h1, .h1 {
+    font-size: 1.5rem !important;
+  }
+  
+  h2, .h2 {
+    font-size: 1.25rem !important;
+  }
+  
+  h3, .h3 {
+    font-size: 1.1rem !important;
+  }
+  
+  h4, .h4 {
+    font-size: 1rem !important;
+  }
+  
+  h5, .h5 {
+    font-size: 0.9rem !important;
+  }
+  
+  p, .card-text {
+    font-size: 0.85rem !important;
+  }
+  
+  .lead {
+    font-size: 1rem !important;
+  }
+  
+  .small, small {
+    font-size: 0.75rem !important;
+  }
+  
+  /* Reduce button sizes */
+  .btn {
+    padding: 0.4rem 0.75rem !important;
+    font-size: 0.85rem !important;
+  }
+  
+  .btn-lg {
+    padding: 0.5rem 1rem !important;
+    font-size: 0.9rem !important;
+  }
+  
+  .btn-sm {
+    padding: 0.3rem 0.6rem !important;
+    font-size: 0.8rem !important;
+  }
+  
+  .btn i {
+    font-size: 0.85rem !important;
+  }
+  
+  /* Reduce form elements */
+  .form-control, .form-select {
+    font-size: 0.9rem;
+    padding: 0.5rem 0.75rem;
+  }
+  
+  .form-label {
+    font-size: 0.85rem;
+  }
+  
+  /* Reduce card padding */
+  .card-body {
+    padding: 1rem;
+  }
+  
+  .card-title {
+    font-size: 1rem !important;
+  }
+  
+  /* Reduce badge sizes */
+  .badge {
+    font-size: 0.75rem;
+    padding: 0.3rem 0.5rem;
+  }
+  
+  /* Reduce alert text */
+  .alert {
+    font-size: 0.85rem;
+    padding: 0.75rem;
+  }
+  
+  /* Reduce list text */
+  ul li, ol li {
+    font-size: 0.85rem;
+  }
+}

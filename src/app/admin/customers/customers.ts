@@ -70,9 +70,7 @@ export class Customers implements OnInit {
       const term = this.searchTerm.toLowerCase();
       filtered = filtered.filter(c => 
         c.email.toLowerCase().includes(term) ||
-        c.first_name?.toLowerCase().includes(term) ||
-        c.last_name?.toLowerCase().includes(term) ||
-        c.phone_number?.toLowerCase().includes(term)
+        c.phone?.toLowerCase().includes(term)
       );
     }
     
@@ -81,11 +79,7 @@ export class Customers implements OnInit {
       filtered = filtered.filter(c => c.role === this.filterRole);
     }
     
-    // Status filter
-    if (this.filterStatus !== 'ALL') {
-      const isActive = this.filterStatus === 'ACTIVE';
-      filtered = filtered.filter(c => c.is_active === isActive);
-    }
+    // Status filter - removed since User doesn't have is_active anymore
     
     this.filteredCustomers = filtered;
     this.cdr.detectChanges();
@@ -157,9 +151,7 @@ export class Customers implements OnInit {
   }
 
   getCustomerName(customer: User): string {
-    const firstName = customer.first_name || '';
-    const lastName = customer.last_name || '';
-    return firstName || lastName ? `${firstName} ${lastName}`.trim() : 'N/A';
+    return customer.email; // Use email as the display name since we don't have first/last name
   }
 
   getStatusBadgeClass(isActive: boolean): string {
@@ -168,13 +160,5 @@ export class Customers implements OnInit {
 
   getRoleBadgeClass(role: string): string {
     return role === 'ADMIN' ? 'bg-danger' : 'bg-info';
-  }
-
-  formatDate(dateString: string): string {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric'
-    });
   }
 }

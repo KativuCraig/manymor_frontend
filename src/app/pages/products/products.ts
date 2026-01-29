@@ -57,6 +57,9 @@ export class Products implements OnInit {
   ngOnInit(): void {
     console.log('Products: Initializing...');
     
+    // Hide filters on mobile by default
+    this.showFilters = window.innerWidth >= 768;
+    
     // FIRST: Read query parameters from URL
     this.readRouteParameters();
     

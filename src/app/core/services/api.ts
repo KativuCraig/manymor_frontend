@@ -2,6 +2,12 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
+import { 
+  TwoFactorSetupResponse, 
+  TwoFactorVerifyResponse, 
+  TwoFactorStatusResponse, 
+  TwoFactorDisableRequest 
+} from '../models/api-responses';
 
 // ==================== INTERFACES ====================
 
@@ -10,11 +16,7 @@ export interface User {
   email: string;
   phone: string;
   role: 'ADMIN' | 'CUSTOMER';
-  first_name?: string;
-  last_name?: string;
-  phone_number?: string;
-  date_joined: string;
-  is_active: boolean;
+  two_factor_enabled: boolean;
 }
 
 export interface Category {
@@ -75,10 +77,34 @@ export interface OrderItem {
 export interface Order {
   id: number;
   status: 'PLACED' | 'PACKED' | 'DISPATCHED' | 'IN_TRANSIT' | 'DELIVERED';
-  payment_status: 'PAID' | 'PENDING' | 'FAILED';
+  payment_status: 'PAID' | 'PENDING' | 'FAILED' | 'INITIATED' | 'CANCELLED';
+  payment_reference?: string;
+  shipping_address?: string;
   total_amount: number;
   items: OrderItem[];
   created_at: string;
+}
+
+export interface PaymentInfo {
+  clientReference: string;
+  paymeURL: string;
+  status: string;
+}
+
+export interface CheckoutResponse {
+  order: Order;
+  payment: PaymentInfo;
+}
+
+export interface PaymentStatusCheck {
+  order: Order;
+  payment_status: {
+    status: string;
+    clientReference: string;
+    paymentGatewayReference?: string;
+    orderDate?: string;
+  };
+  message: string;
 }
 
 export interface Delivery {
@@ -89,22 +115,21 @@ export interface Delivery {
   updated_at: string;
 }
 
-export interface UserProfile {
-  id: number;
-  email: string;
-  first_name: string;
-  last_name: string;
-  phone_number: string;
-  role: string;
-  date_joined: string;
-}
-
 export interface Address {
   id: number;
   label: string;
   city: string;
   address_line: string;
   is_default: boolean;
+}
+
+export interface UserProfile {
+  id: number;
+  email: string;
+  phone: string;
+  role: string;
+  two_factor_enabled: boolean;
+  addresses: Address[];
 }
 
 export interface AuthResponse {
@@ -185,10 +210,13 @@ export class Api {
   }
 
   /**
-   * Login user
+   * Login user (with optional 2FA code)
    */
-  login(email: string, password: string): Observable<AuthResponse> {
-    const body = { email, password };
+  login(email: string, password: string, twoFactorCode?: string): Observable<AuthResponse> {
+    const body: any = { email, password };
+    if (twoFactorCode) {
+      body.two_factor_code = twoFactorCode;
+    }
     return this.http.post<AuthResponse>(`${this.baseUrl}/auth/login/`, body);
   }
 
@@ -355,10 +383,21 @@ export class Api {
   // ==================== ORDERS ====================
   
   /**
-   * Checkout current cart
+   * Checkout current cart with ClicknPay payment
    */
-  checkout(orderData: any): Observable<Order> {
-    return this.http.post<Order>(`${this.baseUrl}/orders/checkout/`, orderData);
+  checkout(orderData: {
+    phone_number: string;
+    shipping_address: string;
+    return_url: string;
+  }): Observable<CheckoutResponse> {
+    return this.http.post<CheckoutResponse>(`${this.baseUrl}/orders/checkout/`, orderData);
+  }
+
+  /**
+   * Check payment status for an order
+   */
+  checkPaymentStatus(orderId: number): Observable<PaymentStatusCheck> {
+    return this.http.get<PaymentStatusCheck>(`${this.baseUrl}/orders/${orderId}/check-payment/`);
   }
 
   /**
@@ -460,11 +499,14 @@ updateUserRole(userId: number, role: 'ADMIN' | 'CUSTOMER'): Observable<User> {
 
 // ==================== PROFILE & ADDRESSES ====================
 
+/**
+ * Get full profile with addresses included
+ */
 getProfile(): Observable<UserProfile> {
   return this.http.get<UserProfile>(`${this.baseUrl}/auth/profile/`);
 }
 
-updateProfile(data: { first_name: string; last_name: string; phone_number: string; email: string }): Observable<UserProfile> {
+updateProfile(data: { phone?: string }): Observable<UserProfile> {
   return this.http.put<UserProfile>(`${this.baseUrl}/auth/profile/`, data);
 }
 
@@ -486,6 +528,36 @@ updateAddress(id: number, data: Partial<Address>): Observable<Address> {
 
 deleteAddress(id: number): Observable<void> {
   return this.http.delete<void>(`${this.baseUrl}/auth/addresses/${id}/`);
+}
+
+// ==================== TWO-FACTOR AUTHENTICATION ====================
+
+/**
+ * Setup 2FA - Generate QR code
+ */
+setup2FA(): Observable<TwoFactorSetupResponse> {
+  return this.http.post<TwoFactorSetupResponse>(`${this.baseUrl}/auth/2fa/setup/`, {});
+}
+
+/**
+ * Verify 2FA code and enable 2FA
+ */
+verify2FA(code: string): Observable<TwoFactorVerifyResponse> {
+  return this.http.post<TwoFactorVerifyResponse>(`${this.baseUrl}/auth/2fa/verify/`, { code });
+}
+
+/**
+ * Disable 2FA
+ */
+disable2FA(data: TwoFactorDisableRequest): Observable<{ message: string }> {
+  return this.http.post<{ message: string }>(`${this.baseUrl}/auth/2fa/disable/`, data);
+}
+
+/**
+ * Get 2FA status
+ */
+get2FAStatus(): Observable<TwoFactorStatusResponse> {
+  return this.http.get<TwoFactorStatusResponse>(`${this.baseUrl}/auth/2fa/status/`);
 }
 
 }
